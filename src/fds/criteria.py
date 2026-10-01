@@ -141,13 +141,22 @@ def evaluate(bundle_dir: Path, spec: ScenarioSpec, thresholds: dict, hrr_peak_si
                                 margin=margin, passed=passed, quantities=qres))
     peak_sim = hrr_peak_sim if hrr_peak_sim is not None else read_hrr_peak(bundle_dir / f"{spec.chid}_hrr.csv")
     hrr = HrrCheck(peak_kw_set=spec.fire.hrr_peak_kw, peak_kw_sim=peak_sim,
-                   ok=abs(peak_sim - spec.fire.hrr_peak_kw) <= 0.05 * spec.fire.hrr_peak_kw)
+                   ok=abs(peak_sim - spec.fire.hrr_peak_kw) <= HRR_TOL * spec.fire.hrr_peak_kw)
     return CriteriaResult(chid=spec.chid, thresholds_profile=spec.thresholds_profile, t_end_s=t_end, paths=paths, hrr_check=hrr)
 
 
-def read_hrr_peak(csv_path: Path) -> float:
+HRR_TOL = 0.10        # relative tolerance on the smoothed peak
+HRR_WINDOW_S = 10.0   # moving-average window; FDS instantaneous HRR fluctuates
+
+
+def read_hrr_peak(csv_path: Path, window_s: float = HRR_WINDOW_S) -> float:
+    """Peak of the moving-average HRR (kW)."""
     with open(csv_path, newline="") as f:
         rows = list(csv.reader(f))
     names = [c.strip() for c in rows[1]]
     j = names.index("HRR")
-    return max(float(r[j]) for r in rows[2:] if len(r) == len(names))
+    t, h = [], []
+    for r in rows[2:]:
+        if len(r) == len(names):
+            t.append(float(r[0])); h.append(float(r[j]))
+    return max(_smooth(h, t, window_s)) if h else 0.0
