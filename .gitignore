@@ -183,3 +183,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+.venv/
+__pycache__/
+*.pyc
+runs/
