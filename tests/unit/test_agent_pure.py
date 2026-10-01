@@ -40,3 +40,12 @@ def test_apply_patch():
 def test_runner_n_meshes():
     from fds.runner import n_meshes
     assert n_meshes("&MESH IJK=1,1,1 XB=0,1,0,1,0,1 /\n&MESH IJK=1,1,1 XB=1,2,0,1,0,1 /") == 2
+
+
+def test_expected_hrr_peak():
+    from fds.criteria import expected_hrr_peak
+    from fds.spec import ScenarioSpec
+    from test_writer import THREE_ROOMS
+    spec = ScenarioSpec(**THREE_ROOMS)           # 500 kW fast: t_peak ~103 s
+    assert expected_hrr_peak(spec, 300) == 500
+    assert 25 < expected_hrr_peak(spec, 30) < 50  # (30/103)^2 * 500 ~ 42 kW
