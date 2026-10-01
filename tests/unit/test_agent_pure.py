@@ -48,4 +48,4 @@ def test_expected_hrr_peak():
     from test_writer import THREE_ROOMS
     spec = ScenarioSpec(**THREE_ROOMS)           # 500 kW fast: t_peak ~103 s
     assert expected_hrr_peak(spec, 300) == 500
-    assert 25 < expected_hrr_peak(spec, 30) < 50  # (30/103)^2 * 500 ~ 42 kW
+    assert 25 < expected_hrr_peak(spec, 30) < 35  # ((30-5)/103)^2 * 500 ~ 29 kW, mid-window

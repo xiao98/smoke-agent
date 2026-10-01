@@ -245,7 +245,7 @@ def run(state: dict) -> dict:
     if not errs and hrr_csv.exists():
         peak = C.read_hrr_peak(hrr_csv)
         expected = C.expected_hrr_peak(spec, spec.sim.t_end_s)
-        if abs(peak - expected) > C.HRR_TOL * expected:
+        if abs(peak - expected) > C.hrr_tolerance(spec, spec.sim.t_end_s) * expected:
             logs.append(f"[hrr_mismatch] simulated peak HRR {peak:.0f} kW vs expected {expected:.0f} kW by t_end\n"
                         "  cause: fire surface obstructed, under-ventilated, or ramp not reaching peak before t_end\n"
                         "  fix: check burner placement, make-up air and sim.t_end_s vs time to peak")
