@@ -16,6 +16,7 @@ from nodes.reviewer_node import reviewer_node
 from nodes.visualization_node import visualization_node
 from nodes.hpc_runner_node import hpc_runner_node
 from nodes.imported_case_node import case_import_node
+from fds import agent as fds_agent
 from router_func import (
     route_after_case_import,
     route_after_meshing,
@@ -50,6 +51,8 @@ def create_foam_agent_graph() -> StateGraph:
     workflow.add_node("reviewer", reviewer_node)
     workflow.add_node("visualization", visualization_node)
     workflow.add_node("case_import", case_import_node)
+    workflow.add_node("criteria", fds_agent.criteria_node)
+    workflow.add_node("report", fds_agent.report_node)
     
     # Add edges
     workflow.add_conditional_edges(START, route_workflow_entry)
@@ -61,6 +64,8 @@ def create_foam_agent_graph() -> StateGraph:
     workflow.add_conditional_edges("reviewer", route_after_reviewer)
     workflow.add_conditional_edges("case_import", route_after_case_import)
     workflow.add_edge("visualization", END)
+    workflow.add_edge("criteria", "report")
+    workflow.add_edge("report", END)
     
     return workflow
 

@@ -877,6 +877,11 @@ def load_agent_resources(config: Any) -> tuple[Any, Any]:
 
 
 class GraphState(TypedDict):
+    # SmokeAgent (fds) fields
+    scenario_spec: dict
+    fds_fingerprint: str
+    criteria_result: dict
+    report_path: str
     user_requirement: str
     config: Config
     case_dir: str

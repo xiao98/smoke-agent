@@ -7,6 +7,8 @@ from services.output_safety import (
 )
 from router_func import llm_requires_custom_mesh, llm_requires_hpc, llm_requires_visualization
 from logger import setup_logging
+from solver_target import is_fds
+from fds import agent as fds_agent
 
 
 def planner_node(state):
@@ -45,6 +47,9 @@ def planner_node(state):
                 )
         print("</planner>")
         return result
+
+    if is_fds(state["config"]):
+        return fds_agent.plan(state)
 
     config = state["config"]
     user_requirement = state["user_requirement"]

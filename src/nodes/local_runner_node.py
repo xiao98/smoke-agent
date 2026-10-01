@@ -5,9 +5,14 @@ from typing import Any
 from logger import log_review
 from openfoam_target import runtime_openfoam_target
 from services.run_local import run_allrun_and_collect_errors
+from solver_target import is_fds
+from fds import agent as fds_agent
 
 
 def local_runner_node(state: dict[str, Any]) -> dict[str, Any]:
+    if is_fds(state["config"]):
+        return {**state, **fds_agent.run(state)}
+
     case_dir = state["case_dir"]
     print("<runner>")
     error_logs = run_allrun_and_collect_errors(

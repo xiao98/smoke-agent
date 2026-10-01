@@ -1,6 +1,7 @@
 from langgraph.graph import END
 
 from utils import GraphState
+from solver_target import is_fds
 
 
 def route_workflow_entry(state: GraphState):
@@ -183,6 +184,8 @@ def _route_runner(state: GraphState):
 def route_after_runner(state: GraphState):
     if state.get("error_logs") and len(state["error_logs"]) > 0:
         return "reviewer"
+    if is_fds(state["config"]):
+        return "criteria"
 
     requires_visualization = state.get("requires_visualization")
     if requires_visualization is None:

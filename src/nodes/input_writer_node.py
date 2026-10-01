@@ -4,6 +4,8 @@ from utils import read_case_foamfiles, scan_case_directory
 from services.input_writer import initial_write, build_allrun, rewrite_files
 from translation.esi_translator import convert_case_to_esi_if_needed
 from openfoam_target import database_path_for_config, generation_convention, uses_legacy_esi_translation
+from solver_target import is_fds
+from fds import agent as fds_agent
 
 def input_writer_node(state):
     """
@@ -12,6 +14,9 @@ def input_writer_node(state):
     Args:
         state: The current state containing all necessary information
     """
+
+    if is_fds(state["config"]):
+        return fds_agent.write(state)
 
     mode = state["input_writer_mode"]
     

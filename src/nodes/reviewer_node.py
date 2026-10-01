@@ -1,3 +1,5 @@
+from solver_target import is_fds
+from fds import agent as fds_agent
 # reviewer_node.py
 from services.review import review_error_logs, generate_rewrite_plan, error_fingerprint
 from logger import log_review
@@ -9,6 +11,8 @@ def reviewer_node(state):
     Reviewer node: Reviews the error logs and provides analysis and suggestions
     for fixing the errors. This node only focuses on analysis, not file modification.
     """
+    if is_fds(state["config"]):
+        return fds_agent.review(state)
     print("<reviewer>")
     if not state.get("error_logs"):
         print("No error to review.")
