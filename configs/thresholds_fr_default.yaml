@@ -1,0 +1,9 @@
+profile: fr_default
+eval_height_m: 1.8
+quantities:
+  visibility:   {op: ">=", value: 10.0, unit: m,    source: "LCPP guide ingenierie du desenfumage: 20 m en grand volume, 10 m usuel en petit volume"}
+  temperature:  {op: "<=", value: 60.0, unit: degC, source: "ISO 13571 limite de tenabilite; LCPP 40 degC seuil d'acceptabilite a 2 m"}
+  co:           {op: "<=", value: 1000, unit: ppm,  source: "ISO 13571 ordre de grandeur pour exposition courte; FED non implemente en v1"}
+  layer_height: {op: ">=", value: 2.5,  unit: m,    source: "IT 246 / guide FFMI: hauteur libre >= 2 m ou linteau; 2.5 m usuel pour evacuation et secours"}
+margin_min: 1.0
+smoothing_s: 10
