@@ -178,9 +178,7 @@ def _extra_namelist(config: Any) -> str:
     p = getattr(config, "extra_namelist_file", "") or ""
     if not p or not Path(p).is_file():
         return ""
-    return "
-" + Path(p).read_text(encoding="utf-8").strip() + "
-"
+    return "\n" + Path(p).read_text(encoding="utf-8").strip() + "\n"
 
 
 def _write_and_validate(spec: ScenarioSpec, case_dir: Path, run_solver: bool = True, extra: str = "") -> tuple[str, list[str]]:
