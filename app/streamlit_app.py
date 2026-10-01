@@ -27,7 +27,8 @@ st.set_page_config(page_title="SmokeAgent", page_icon="🔥", layout="wide")
 def list_runs() -> list[Path]:
     if not RUNS.is_dir():
         return []
-    return sorted([p for p in RUNS.iterdir() if (p / "spec.json").is_file()], key=lambda p: p.stat().st_mtime, reverse=True)
+    runs = [p for p in RUNS.iterdir() if (p / "spec.json").is_file()]
+    return sorted(runs, key=lambda p: (not (p / "assumptions.json").is_file(), -p.stat().st_mtime))
 
 
 def read_spec(run: Path) -> dict:
@@ -167,7 +168,9 @@ elif page.startswith("2"):
     for r in runs:
         spec = read_spec(r)
         prog = read_progress(r)
-        rows.append({"étude": r.name, "statut": status_of(r), "t simulé (s)": round(prog.get("sim_time_s", 0)),
+        stt = status_of(r)
+        t_sim = spec["sim"]["t_end_s"] if stt in ("terminé", "jugé") else prog.get("sim_time_s", 0)
+        rows.append({"étude": r.name, "statut": stt, "t simulé (s)": round(t_sim),
                      "durée (s)": spec["sim"]["t_end_s"], "HRR (kW)": spec["fire"]["hrr_peak_kw"], "chemins": len(spec["escape_paths"])})
     if rows:
         st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
@@ -175,7 +178,8 @@ elif page.startswith("2"):
         run = RUNS / pick
         spec = read_spec(run)
         prog = read_progress(run)
-        st.progress(min(1.0, prog.get("sim_time_s", 0) / spec["sim"]["t_end_s"]), text=f"{round(prog.get('sim_time_s', 0))} s / {spec['sim']['t_end_s']} s")
+        t_sim = spec["sim"]["t_end_s"] if status_of(run) in ("terminé", "jugé") else prog.get("sim_time_s", 0)
+        st.progress(min(1.0, t_sim / spec["sim"]["t_end_s"]), text=f"{round(t_sim)} s / {spec['sim']['t_end_s']} s")
         hrr = run / f"{spec['chid']}_hrr.csv"
         if hrr.is_file():
             df = read_csv_fds(hrr)
@@ -210,7 +214,7 @@ elif page.startswith("3"):
                          **{f"{q} (s)": (None if r.first_exceed_s is None else round(r.first_exceed_s)) for q, r in p.quantities.items()}})
         st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
         st.markdown("**Seuils appliqués**")
-        st.table(pd.DataFrame([{"quantité": q, "critère": f"{c['op']} {c['value']} {c['unit']}", "source": c["source"]} for q, c in th["quantities"].items()]))
+        st.dataframe(pd.DataFrame([{"quantité": q, "critère": f"{c['op']} {c['value']} {c['unit']}", "source": c["source"]} for q, c in th["quantities"].items()]), use_container_width=True, hide_index=True)
         hrr = res.hrr_check
         st.markdown(f"Contrôle du foyer : HRR simulé **{hrr.peak_kw_sim:.0f} kW** pour **{hrr.peak_kw_set:.0f} kW** attendu → {'ok' if hrr.ok else 'écart'}")
         # curves
