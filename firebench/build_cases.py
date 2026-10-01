@@ -92,32 +92,40 @@ def main() -> None:
         title = head[0].get("TITLE", "") if head else ""
         t_end = records_of(recs, "TIME")[0].floats("T_END")[0] if records_of(recs, "TIME") else None
         refs, ref_devc = [], []
-        for r in rows[: args.max_refs]:
-            col = r["d2_Dep_Col_Name"].strip()
+        seen_devc: set[str] = set()
+        for r in rows:
+            if len(refs) >= args.max_refs:
+                break
             exp_file = exp_repo / r["d1_Filename"].strip()
             if not exp_file.is_file():
                 continue
-            d = devc_by_id.get(col)
+            # NIST dataplot: '|' separates paired series, '+' sums columns within one series
+            exp_parts = [c.strip() for c in r["d1_Dep_Col_Name"].split("|")]
+            fds_parts = [c.strip() for c in r["d2_Dep_Col_Name"].split("|")]
             qkind = QUANTITIES[r["Quantity"].strip()]
-            refs.append({
-                "exp_file": str(Path(r["d1_Filename"].strip())),
-                "exp_col_name_row": int(float(r["d1_Col_Name_Row"] or 1)),
-                "exp_data_row": int(float(r["d1_Data_Row"] or 2)),
-                "exp_time_col": r["d1_Ind_Col_Name"].strip(),
-                "exp_col": r["d1_Dep_Col_Name"].strip(),
-                "exp_initial": float(r["d1_Initial_Value"] or 0),
-                "exp_comp": [float(r["d1_Comp_Start"] or 0), float(r["d1_Comp_End"] or 1e9)],
-                "fds_col": col,
-                "fds_initial": float(r["d2_Initial_Value"] or 0),
-                "fds_comp": [float(r["d2_Comp_Start"] or 0), float(r["d2_Comp_End"] or 1e9)],
-                "metric": r["Metric"].strip() or "max",
-                "quantity": r["Quantity"].strip(),
-                "kind": qkind,
-                "tol_rel": max(TOL_FLOOR, 2 * sigma.get(r["Quantity"].strip(), 0.0)),
-                "devc_in_source": d is not None,
-            })
-            if d is not None:
-                ref_devc.append(d)
+            for exp_col, fds_col in zip(exp_parts, fds_parts):
+                ids = [c.strip() for c in fds_col.split("+")]
+                found = [devc_by_id[i] for i in ids if i in devc_by_id]
+                refs.append({
+                    "exp_file": str(Path(r["d1_Filename"].strip())),
+                    "exp_col_name_row": int(float(r["d1_Col_Name_Row"] or 1)),
+                    "exp_data_row": int(float(r["d1_Data_Row"] or 2)),
+                    "exp_time_col": r["d1_Ind_Col_Name"].strip(),
+                    "exp_col": exp_col,
+                    "exp_initial": float(r["d1_Initial_Value"] or 0),
+                    "exp_comp": [float(r["d1_Comp_Start"] or 0), float(r["d1_Comp_End"] or 1e9)],
+                    "fds_col": fds_col,
+                    "fds_initial": float(r["d2_Initial_Value"] or 0),
+                    "fds_comp": [float(r["d2_Comp_Start"] or 0), float(r["d2_Comp_End"] or 1e9)],
+                    "metric": r["Metric"].strip() or "max",
+                    "quantity": r["Quantity"].strip(),
+                    "kind": qkind,
+                    "tol_rel": max(TOL_FLOOR, 2 * sigma.get(r["Quantity"].strip(), 0.0)),
+                    "devc_in_source": len(found) == len(ids),
+                })
+                for d in found:
+                    if d.get("ID") not in seen_devc:
+                        seen_devc.add(d.get("ID")); ref_devc.append(d)
         if not refs:
             continue
         case_dir = out / chid.lower()

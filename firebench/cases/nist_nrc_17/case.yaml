@@ -13,12 +13,12 @@ references:
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: Time
-  exp_col: Tree 1-10|Tree 2-10|Tree 3-10|Tree 5-10|Tree 6-10|Tree 7-10
+  exp_col: Tree 1-10
   exp_initial: 29.0
   exp_comp:
   - 0.0
   - 10000.0
-  fds_col: Tr 1-10|Tr 2-10|Tr 3-10|Tr 5-10|Tr 6-10|Tr 7-10
+  fds_col: Tr 1-10
   fds_initial: 29.0
   fds_comp:
   - 0.0
@@ -27,6 +27,101 @@ references:
   quantity: Ceiling Jet Temperature
   kind: ceiling_jet_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_17_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 2-10
+  exp_initial: 29.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 2-10
+  fds_initial: 29.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_17_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 3-10
+  exp_initial: 29.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 3-10
+  fds_initial: 29.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_17_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 5-10
+  exp_initial: 29.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 5-10
+  fds_initial: 29.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_17_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 6-10
+  exp_initial: 29.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 6-10
+  fds_initial: 29.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_17_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 7-10
+  exp_initial: 29.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 7-10
+  fds_initial: 29.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
 gate3_min_fraction: 0.67
 expected_criteria_hash: null

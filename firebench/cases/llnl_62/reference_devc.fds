@@ -1,1 +1,2 @@
-
+&DEVC XYZ=0,0,0, QUANTITY='CONTROL VALUE', UNITS='C', CTRL_ID='West_Upper', ID='West_Upper_TCs' /
+&DEVC XYZ=0,0,0, QUANTITY='CONTROL VALUE', UNITS='C', CTRL_ID='West_Middle', ID='West_Middle_TCs' /

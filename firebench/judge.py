@@ -46,10 +46,12 @@ def read_table(path: Path, col_name_row: int = 1, data_row: int = 2) -> tuple[li
 
 
 def series(path: Path, time_col: str, col: str, col_name_row: int = 1, data_row: int = 2) -> tuple[list[float], list[float]]:
+    """One series; 'A+B' (NIST dataplot convention) sums the columns."""
     names, data = read_table(path, col_name_row, data_row)
-    ti, ci = names.index(time_col), names.index(col)
+    ti = names.index(time_col)
+    cis = [names.index(c.strip()) for c in col.split("+")]
     t = [r[ti] for r in data]
-    v = [r[ci] for r in data]
+    v = [sum(r[ci] for ci in cis) for r in data]
     return t, v
 
 

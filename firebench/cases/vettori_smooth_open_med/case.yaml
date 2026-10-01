@@ -15,12 +15,12 @@ references:
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: TIME
-  exp_col: TC_1_02|TC_2_02
+  exp_col: TC_1_02
   exp_initial: 16.0
   exp_comp:
   - 0.0
   - 80.0
-  fds_col: TC_1_02|TC_2_02
+  fds_col: TC_1_02
   fds_initial: 20.0
   fds_comp:
   - 0.0
@@ -29,17 +29,36 @@ references:
   quantity: Ceiling Jet Temperature
   kind: ceiling_jet_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
+- exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_06.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TC_2_02
+  exp_initial: 16.0
+  exp_comp:
+  - 0.0
+  - 80.0
+  fds_col: TC_2_02
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 80.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
 - exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_07.csv
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: TIME
-  exp_col: TC_1_02|TC_2_02
+  exp_col: TC_1_02
   exp_initial: 16.0
   exp_comp:
   - 0.0
   - 80.0
-  fds_col: TC_1_02|TC_2_02
+  fds_col: TC_1_02
   fds_initial: 20.0
   fds_comp:
   - 0.0
@@ -48,17 +67,36 @@ references:
   quantity: Ceiling Jet Temperature
   kind: ceiling_jet_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
+- exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_07.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TC_2_02
+  exp_initial: 16.0
+  exp_comp:
+  - 0.0
+  - 80.0
+  fds_col: TC_2_02
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 80.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
 - exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_08.csv
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: TIME
-  exp_col: TC_1_02|TC_2_02
+  exp_col: TC_1_02
   exp_initial: 16.0
   exp_comp:
   - 0.0
   - 80.0
-  fds_col: TC_1_02|TC_2_02
+  fds_col: TC_1_02
   fds_initial: 20.0
   fds_comp:
   - 0.0
@@ -67,6 +105,25 @@ references:
   quantity: Ceiling Jet Temperature
   kind: ceiling_jet_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
+- exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_08.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TC_2_02
+  exp_initial: 16.0
+  exp_comp:
+  - 0.0
+  - 80.0
+  fds_col: TC_2_02
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 80.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
 gate3_min_fraction: 0.67
 expected_criteria_hash: null

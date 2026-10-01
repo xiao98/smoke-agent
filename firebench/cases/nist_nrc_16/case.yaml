@@ -13,12 +13,12 @@ references:
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: Time
-  exp_col: Tree 1-10|Tree 2-10|Tree 3-10|Tree 4-10|Tree 5-10|Tree 6-10|Tree 7-10
+  exp_col: Tree 1-10
   exp_initial: 26.0
   exp_comp:
   - 0.0
   - 10000.0
-  fds_col: Tr 1-10|Tr 2-10|Tr 3-10|Tr 4-10|Tr 5-10|Tr 6-10|Tr 7-10
+  fds_col: Tr 1-10
   fds_initial: 26.0
   fds_comp:
   - 0.0
@@ -27,17 +27,131 @@ references:
   quantity: Ceiling Jet Temperature
   kind: ceiling_jet_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
 - exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: Time
-  exp_col: A-Ts-6|A-Ts-18|A-Tc-19|A-Ts-29
+  exp_col: Tree 2-10
   exp_initial: 26.0
   exp_comp:
   - 0.0
   - 10000.0
-  fds_col: A Ts-6|A Ts-18|A Tc-19|A Ts-29
+  fds_col: Tr 2-10
+  fds_initial: 26.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 3-10
+  exp_initial: 26.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 3-10
+  fds_initial: 26.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 4-10
+  exp_initial: 26.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 4-10
+  fds_initial: 26.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 5-10
+  exp_initial: 26.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 5-10
+  fds_initial: 26.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 6-10
+  exp_initial: 26.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 6-10
+  fds_initial: 26.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 7-10
+  exp_initial: 26.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 7-10
+  fds_initial: 26.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: A-Ts-6
+  exp_initial: 26.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: A Ts-6
   fds_initial: 26.0
   fds_comp:
   - 0.0
@@ -46,17 +160,17 @@ references:
   quantity: Target Temperature
   kind: target_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
 - exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: Time
-  exp_col: B-Ts-4|B-Ts-14|B-Tc-15|B-Ts-27
+  exp_col: A-Ts-18
   exp_initial: 26.0
   exp_comp:
   - 0.0
   - 10000.0
-  fds_col: B Ts-4|B Ts-14|B Tc-15|B Ts-27
+  fds_col: A Ts-18
   fds_initial: 26.0
   fds_comp:
   - 0.0
@@ -65,17 +179,17 @@ references:
   quantity: Target Temperature
   kind: target_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
 - exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: Time
-  exp_col: C-Ts-1|C-Tc-2|C-Ts-8|C-Tc-9
+  exp_col: A-Tc-19
   exp_initial: 26.0
   exp_comp:
   - 0.0
   - 10000.0
-  fds_col: C Ts-1|C Tc-2|C Ts-8|C Tc-9
+  fds_col: A Tc-19
   fds_initial: 26.0
   fds_comp:
   - 0.0
@@ -84,17 +198,17 @@ references:
   quantity: Target Temperature
   kind: target_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
 - exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
   exp_col_name_row: 1
   exp_data_row: 2
   exp_time_col: Time
-  exp_col: C-Ts-22|C-Tc-23|C-Ts-24|C-Tc-25
+  exp_col: A-Ts-29
   exp_initial: 26.0
   exp_comp:
   - 0.0
   - 10000.0
-  fds_col: C Ts-22|C Tc-23|C Ts-24|C Tc-25
+  fds_col: A Ts-29
   fds_initial: 26.0
   fds_comp:
   - 0.0
@@ -103,63 +217,6 @@ references:
   quantity: Target Temperature
   kind: target_temperature
   tol_rel: 0.15
-  devc_in_source: false
-- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
-  exp_col_name_row: 1
-  exp_data_row: 2
-  exp_time_col: Time
-  exp_col: D-Ts-3|D-Ts-12|D-Tc-13|D-Ts-26
-  exp_initial: 26.0
-  exp_comp:
-  - 0.0
-  - 10000.0
-  fds_col: D Ts-3|D Ts-12|D Tc-13|D Ts-26
-  fds_initial: 26.0
-  fds_comp:
-  - 0.0
-  - 10000.0
-  metric: max
-  quantity: Target Temperature
-  kind: target_temperature
-  tol_rel: 0.15
-  devc_in_source: false
-- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
-  exp_col_name_row: 1
-  exp_data_row: 2
-  exp_time_col: Time
-  exp_col: F-Ts-7|F-Ts-20|F-Tc-21|F-Ts-30
-  exp_initial: 26.0
-  exp_comp:
-  - 0.0
-  - 10000.0
-  fds_col: F Ts-7|F Ts-20|F Tc-21|F Ts-30
-  fds_initial: 26.0
-  fds_comp:
-  - 0.0
-  - 10000.0
-  metric: max
-  quantity: Target Temperature
-  kind: target_temperature
-  tol_rel: 0.15
-  devc_in_source: false
-- exp_file: NIST_NRC/NIST_NRC_Test_16_file_1.csv
-  exp_col_name_row: 1
-  exp_data_row: 2
-  exp_time_col: Time
-  exp_col: G-Ts-31|G-Ts-32|G-Ts-33|G-Tc-34|G-Ts-35|G-Ts-36
-  exp_initial: 26.0
-  exp_comp:
-  - 0.0
-  - 10000.0
-  fds_col: G Ts-31|G Ts-32|G Ts-33|G Tc-34|G Ts-35|G Ts-36
-  fds_initial: 26.0
-  fds_comp:
-  - 0.0
-  - 10000.0
-  metric: max
-  quantity: Target Temperature
-  kind: target_temperature
-  tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
 gate3_min_fraction: 0.67
 expected_criteria_hash: null

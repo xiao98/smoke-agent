@@ -14,12 +14,12 @@ references:
   exp_col_name_row: 1
   exp_data_row: 3
   exp_time_col: Time
-  exp_col: West Upper TCs|West Middle TCs
+  exp_col: West Upper TCs
   exp_initial: 24.0
   exp_comp:
   - 0.0
   - 5000.0
-  fds_col: West_Upper_TCs|West_Middle_TCs
+  fds_col: West_Upper_TCs
   fds_initial: 24.0
   fds_comp:
   - 0.0
@@ -28,6 +28,25 @@ references:
   quantity: HGL Temperature; Forced Ventilation
   kind: hgl_temperature
   tol_rel: 0.15
-  devc_in_source: false
+  devc_in_source: true
+- exp_file: LLNL_Enclosure/LLNL_19.csv
+  exp_col_name_row: 1
+  exp_data_row: 3
+  exp_time_col: Time
+  exp_col: West Middle TCs
+  exp_initial: 24.0
+  exp_comp:
+  - 0.0
+  - 5000.0
+  fds_col: West_Middle_TCs
+  fds_initial: 24.0
+  fds_comp:
+  - 0.0
+  - 5000.0
+  metric: max
+  quantity: HGL Temperature; Forced Ventilation
+  kind: hgl_temperature
+  tol_rel: 0.15
+  devc_in_source: true
 gate3_min_fraction: 0.67
 expected_criteria_hash: null
