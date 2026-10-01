@@ -146,6 +146,7 @@ def evaluate(bundle_dir: Path, spec: ScenarioSpec, thresholds: dict, hrr_peak_si
 
 
 HRR_TOL = 0.10        # relative tolerance on the smoothed peak
+HRR_WINDOW_S = 10.0   # moving-average window; FDS instantaneous HRR fluctuates
 
 
 def expected_hrr_peak(spec: ScenarioSpec, t_end: float, window_s: float = HRR_WINDOW_S) -> float:
@@ -164,7 +165,6 @@ def expected_hrr_peak(spec: ScenarioSpec, t_end: float, window_s: float = HRR_WI
 def hrr_tolerance(spec: ScenarioSpec, t_end: float) -> float:
     """10% on the plateau, 20% while still growing (ramp interpolation + ignition lag)."""
     return HRR_TOL if t_end >= spec.fire.time_to_peak_s() else 2 * HRR_TOL
-HRR_WINDOW_S = 10.0   # moving-average window; FDS instantaneous HRR fluctuates
 
 
 def read_hrr_peak(csv_path: Path, window_s: float = HRR_WINDOW_S) -> float:
