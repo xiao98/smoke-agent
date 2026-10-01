@@ -89,6 +89,9 @@ class Fire(BaseModel):
     location_xb: XB  # burner footprint (z0 == z1 on a floor/obstruction top)
     hrr_peak_kw: float = Field(..., gt=0)
     growth: Growth = "fast"
+    # Explicit time to reach the peak (s). Overrides the NFPA alpha of `growth`;
+    # use it when the source states "peak reached at N s".
+    time_to_peak_s: Optional[float] = Field(None, gt=0)
     fuel: Fuel = Field(default_factory=Fuel)
     _v = field_validator("location_xb")(_check_xb)
 
@@ -97,9 +100,11 @@ class Fire(BaseModel):
         x0, x1, y0, y1, _, _ = self.location_xb
         return (x1 - x0) * (y1 - y0)
 
-    def time_to_peak_s(self) -> float:
+    def t_peak(self) -> float:
         if self.growth == "constant":
             return 0.0
+        if self.time_to_peak_s:
+            return float(self.time_to_peak_s)
         return (self.hrr_peak_kw / ALPHA[self.growth]) ** 0.5
 
 

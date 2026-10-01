@@ -65,3 +65,11 @@ def test_solver_setup_run():
     spec = ScenarioSpec(**THREE_ROOMS)
     rep = V.validate(spec, write(spec), run_solver=True)
     assert rep.ok, rep.errors
+
+
+def test_explicit_time_to_peak():
+    spec = ScenarioSpec(**dict(THREE_ROOMS, fire={"location_xb": [1.5, 2.5, 1.75, 2.25, 0, 0], "hrr_peak_kw": 1055, "growth": "fast", "time_to_peak_s": 100}))
+    assert spec.fire.t_peak() == 100
+    recs = parse(write(spec))
+    ramps = [r for r in records_of(recs, "RAMP") if r.get("ID") == "fire_ramp"]
+    assert any(abs(r.floats("T")[0] - 100) < 1e-6 and r.floats("F")[0] == 1.0 for r in ramps)

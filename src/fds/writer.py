@@ -60,7 +60,7 @@ def ramp_records(spec: ScenarioSpec) -> list[Record]:
     f = spec.fire
     if f.growth == "constant":
         return []
-    tp = f.time_to_peak_s()
+    tp = f.t_peak()
     pts = [(0.0, 0.0)]
     for k in (0.25, 0.5, 0.75, 1.0):
         pts.append((k * tp, k * k))

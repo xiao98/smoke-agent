@@ -155,7 +155,7 @@ def expected_hrr_peak(spec: ScenarioSpec, t_end: float, window_s: float = HRR_WI
     During t-squared growth the moving average lags the instantaneous curve, so
     the comparison point is the middle of the averaging window.
     """
-    tp = spec.fire.time_to_peak_s()
+    tp = spec.fire.t_peak()
     if tp <= 0 or t_end >= tp + window_s:
         return spec.fire.hrr_peak_kw
     t_mid = max(0.0, t_end - window_s / 2)
@@ -164,7 +164,7 @@ def expected_hrr_peak(spec: ScenarioSpec, t_end: float, window_s: float = HRR_WI
 
 def hrr_tolerance(spec: ScenarioSpec, t_end: float) -> float:
     """10% on the plateau, 20% while still growing (ramp interpolation + ignition lag)."""
-    return HRR_TOL if t_end >= spec.fire.time_to_peak_s() else 2 * HRR_TOL
+    return HRR_TOL if t_end >= spec.fire.t_peak() else 2 * HRR_TOL
 
 
 def read_hrr_peak(csv_path: Path, window_s: float = HRR_WINDOW_S) -> float:
