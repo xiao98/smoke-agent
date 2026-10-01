@@ -1,0 +1,72 @@
+id: vettori_smooth_corner_med
+chid: Vettori_SMOOTH_CORNER_MED
+group: basic
+source_dir: Vettori_Flat_Ceiling
+source_fds: Validation/Vettori_Flat_Ceiling/FDS_Input_Files/Vettori_SMOOTH_CORNER_MED.fds
+title: Smooth Flat Ceiling, Corner Burner Location, Medium Growth Rate Fire, Experiments
+  36, 37 and 38
+t_end_s: 370.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] Smooth Flat Ceiling, Corner
+  Burner Location, Medium Growth Rate Fire, Experiments 36, 37 and 38'
+rset_s: 120
+references:
+- exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_36.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TC_1_02|TC_2_02
+  exp_initial: 16.0
+  exp_comp:
+  - 0.0
+  - 50.0
+  fds_col: TC_1_02|TC_2_02
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 50.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: false
+- exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_37.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TC_1_02|TC_2_02
+  exp_initial: 16.0
+  exp_comp:
+  - 0.0
+  - 45.0
+  fds_col: TC_1_02|TC_2_02
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 45.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: false
+- exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_38.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TC_1_02|TC_2_02
+  exp_initial: 16.0
+  exp_comp:
+  - 0.0
+  - 50.0
+  fds_col: TC_1_02|TC_2_02
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 50.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: false
+gate3_min_fraction: 0.67
+expected_criteria_hash: null

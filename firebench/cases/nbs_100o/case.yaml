@@ -1,0 +1,165 @@
+id: nbs_100o
+chid: NBS_100O
+group: basic
+source_dir: NBS_Multi-Room
+source_fds: Validation/NBS_Multi-Room/FDS_Input_Files/NBS_100O.fds
+title: NBS Multiroom Test 100O
+t_end_s: 1200.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] NBS Multiroom Test 100O'
+rset_s: 120
+references:
+- exp_file: NBS_Multi-Room/NBS_MV100O_Tree1_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T_upper
+  exp_initial: 20.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Layer Temp 1
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: HGL Temperature; No Ventilation
+  kind: hgl_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NBS_Multi-Room/NBS_MV100O_Tree3_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T_upper
+  exp_initial: 20.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Layer Temp 3
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: HGL Temperature; No Ventilation
+  kind: hgl_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NBS_Multi-Room/NBS_MV100O_Tree4_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T_upper
+  exp_initial: 20.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Layer Temp 4
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: HGL Temperature; No Ventilation
+  kind: hgl_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NBS_Multi-Room/NBS_MV100O_Tree5_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T_upper
+  exp_initial: 20.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Layer Temp 5
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: HGL Temperature; No Ventilation
+  kind: hgl_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NBS_Multi-Room/NBS_MV100O_Tree1_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Height
+  exp_initial: 2.4
+  exp_comp:
+  - 300.0
+  - 600.0
+  fds_col: Layer Height 1
+  fds_initial: 2.4
+  fds_comp:
+  - 300.0
+  - 600.0
+  metric: min
+  quantity: HGL Depth
+  kind: hgl_depth
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NBS_Multi-Room/NBS_MV100O_Tree3_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Height
+  exp_initial: 2.4
+  exp_comp:
+  - 300.0
+  - 600.0
+  fds_col: Layer Height 3
+  fds_initial: 2.4
+  fds_comp:
+  - 300.0
+  - 600.0
+  metric: min
+  quantity: HGL Depth
+  kind: hgl_depth
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NBS_Multi-Room/NBS_MV100O_Tree4_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Height
+  exp_initial: 2.4
+  exp_comp:
+  - 300.0
+  - 600.0
+  fds_col: Layer Height 4
+  fds_initial: 2.4
+  fds_comp:
+  - 300.0
+  - 600.0
+  metric: min
+  quantity: HGL Depth
+  kind: hgl_depth
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: NBS_Multi-Room/NBS_MV100O_Tree5_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Height
+  exp_initial: 2.4
+  exp_comp:
+  - 300.0
+  - 600.0
+  fds_col: Layer Height 5
+  fds_initial: 2.4
+  fds_comp:
+  - 300.0
+  - 600.0
+  metric: min
+  quantity: HGL Depth
+  kind: hgl_depth
+  tol_rel: 0.15
+  devc_in_source: true
+gate3_min_fraction: 0.67
+expected_criteria_hash: null

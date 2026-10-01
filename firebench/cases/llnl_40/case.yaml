@@ -1,0 +1,33 @@
+id: llnl_40
+chid: LLNL_40
+group: basic
+source_dir: LLNL_Enclosure
+source_fds: Validation/LLNL_Enclosure/FDS_Input_Files/LLNL_40.fds
+title: 1986 LLNL Enclosure Fire Test 40
+t_end_s: 6000.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] 1986 LLNL Enclosure Fire Test
+  40'
+rset_s: 120
+references:
+- exp_file: LLNL_Enclosure/LLNL_40.csv
+  exp_col_name_row: 1
+  exp_data_row: 3
+  exp_time_col: Time
+  exp_col: West Upper TCs|West Middle TCs
+  exp_initial: 28.0
+  exp_comp:
+  - 0.0
+  - 4000.0
+  fds_col: West_Upper_TCs|West_Middle_TCs
+  fds_initial: 28.0
+  fds_comp:
+  - 0.0
+  - 4000.0
+  metric: max
+  quantity: HGL Temperature; Forced Ventilation
+  kind: hgl_temperature
+  tol_rel: 0.15
+  devc_in_source: false
+gate3_min_fraction: 0.67
+expected_criteria_hash: null

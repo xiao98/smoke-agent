@@ -1,0 +1,33 @@
+id: nist_smoke_alarms_sdc10
+chid: NIST_Smoke_Alarms_SDC10
+group: basic
+source_dir: NIST_Smoke_Alarms
+source_fds: Validation/NIST_Smoke_Alarms/FDS_Input_Files/NIST_Smoke_Alarms_SDC10.fds
+title: NIST Dunes 2000 Test SDC10 (Chair Specimen 108858)
+t_end_s: 180.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] NIST Dunes 2000 Test SDC10
+  (Chair Specimen 108858)'
+rset_s: 120
+references:
+- exp_file: NIST_Smoke_Alarms/NIST_Smoke_Alarms_SDC10.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TCA_1|TCB_1|TCC_1|TCD_1|TCE_1
+  exp_initial: 26.0
+  exp_comp:
+  - 0.0
+  - 180.0
+  fds_col: TCA_1|TCB_1|TCC_1|TCD_1|TCE_1
+  fds_initial: 26.0
+  fds_comp:
+  - 0.0
+  - 180.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: false
+gate3_min_fraction: 0.67
+expected_criteria_hash: null

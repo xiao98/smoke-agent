@@ -1,0 +1,53 @@
+id: vettori_obstructed_open_slow
+chid: Vettori_OBSTRUCTED_OPEN_SLOW
+group: basic
+source_dir: Vettori_Flat_Ceiling
+source_fds: Validation/Vettori_Flat_Ceiling/FDS_Input_Files/Vettori_OBSTRUCTED_OPEN_SLOW.fds
+title: Obstructed Beamed Ceiling, Open Burner Location, Slow Growth Rate Fire, Experiments
+  14 and 15
+t_end_s: 370.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] Obstructed Beamed Ceiling,
+  Open Burner Location, Slow Growth Rate Fire, Experiments 14 and 15'
+rset_s: 120
+references:
+- exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_14.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TC_1_02|TC_2_02
+  exp_initial: 16.0
+  exp_comp:
+  - 0.0
+  - 180.0
+  fds_col: TC_1_02|TC_2_02
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 180.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: false
+- exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_15.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: TIME
+  exp_col: TC_1_02|TC_2_02
+  exp_initial: 16.0
+  exp_comp:
+  - 0.0
+  - 180.0
+  fds_col: TC_1_02|TC_2_02
+  fds_initial: 20.0
+  fds_comp:
+  - 0.0
+  - 180.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: false
+gate3_min_fraction: 0.67
+expected_criteria_hash: null

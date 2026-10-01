@@ -1,0 +1,33 @@
+id: steckler_116
+chid: Steckler_116
+group: basic
+source_dir: Steckler_Compartment
+source_fds: Validation/Steckler_Compartment/FDS_Input_Files/Steckler_116.fds
+title: Steckler Compartment, Test 116
+t_end_s: 1800.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] Steckler Compartment, Test
+  116'
+rset_s: 120
+references:
+- exp_file: Steckler_Compartment/Steckler_Test_116_layer.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Height
+  exp_initial: 2.13
+  exp_comp:
+  - 1500.0
+  - 1800.0
+  fds_col: HGL Height
+  fds_initial: 2.13
+  fds_comp:
+  - 1500.0
+  - 1800.0
+  metric: mean
+  quantity: HGL Depth
+  kind: hgl_depth
+  tol_rel: 0.15
+  devc_in_source: true
+gate3_min_fraction: 0.67
+expected_criteria_hash: null

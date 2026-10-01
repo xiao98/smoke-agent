@@ -1,0 +1,166 @@
+id: ul_nist_vents_test_1
+chid: UL_NIST_Vents_Test_1
+group: basic
+source_dir: UL_NIST_Vents
+source_fds: Validation/UL_NIST_Vents/FDS_Input_Files/UL_NIST_Vents_Test_1.fds
+title: NIST venting experiments performed at UL
+t_end_s: 4500.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] NIST venting experiments performed
+  at UL'
+rset_s: 120
+references:
+- exp_file: UL_NIST_Vents/UL_NIST_Vents_Test_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T1-2
+  exp_initial: 20.0
+  exp_comp:
+  - 1155.0
+  - 1215.0
+  fds_col: T1-TC2
+  fds_initial: 20.0
+  fds_comp:
+  - 1155.0
+  - 1215.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: UL_NIST_Vents/UL_NIST_Vents_Test_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T1-2
+  exp_initial: 20.0
+  exp_comp:
+  - 1785.0
+  - 1845.0
+  fds_col: T1-TC2
+  fds_initial: 20.0
+  fds_comp:
+  - 1785.0
+  - 1845.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: UL_NIST_Vents/UL_NIST_Vents_Test_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T1-2
+  exp_initial: 20.0
+  exp_comp:
+  - 2115.0
+  - 2175.0
+  fds_col: T1-TC2
+  fds_initial: 20.0
+  fds_comp:
+  - 2115.0
+  - 2175.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: UL_NIST_Vents/UL_NIST_Vents_Test_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T1-2
+  exp_initial: 20.0
+  exp_comp:
+  - 2415.0
+  - 2475.0
+  fds_col: T1-TC2
+  fds_initial: 20.0
+  fds_comp:
+  - 2415.0
+  - 2475.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: UL_NIST_Vents/UL_NIST_Vents_Test_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T1-2
+  exp_initial: 20.0
+  exp_comp:
+  - 2895.0
+  - 2955.0
+  fds_col: T1-TC2
+  fds_initial: 20.0
+  fds_comp:
+  - 2895.0
+  - 2955.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: UL_NIST_Vents/UL_NIST_Vents_Test_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T1-2
+  exp_initial: 20.0
+  exp_comp:
+  - 3120.0
+  - 3180.0
+  fds_col: T1-TC2
+  fds_initial: 20.0
+  fds_comp:
+  - 3120.0
+  - 3180.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: UL_NIST_Vents/UL_NIST_Vents_Test_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T1-2
+  exp_initial: 20.0
+  exp_comp:
+  - 3540.0
+  - 3600.0
+  fds_col: T1-TC2
+  fds_initial: 20.0
+  fds_comp:
+  - 3540.0
+  - 3600.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: UL_NIST_Vents/UL_NIST_Vents_Test_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: T1-2
+  exp_initial: 20.0
+  exp_comp:
+  - 3780.0
+  - 3840.0
+  fds_col: T1-TC2
+  fds_initial: 20.0
+  fds_comp:
+  - 3780.0
+  - 3840.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+gate3_min_fraction: 0.67
+expected_criteria_hash: null

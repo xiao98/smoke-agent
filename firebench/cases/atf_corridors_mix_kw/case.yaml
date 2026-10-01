@@ -1,0 +1,147 @@
+id: atf_corridors_mix_kw
+chid: ATF_Corridors_Mix_kW
+group: basic
+source_dir: ATF_Corridors
+source_fds: Validation/ATF_Corridors/FDS_Input_Files/ATF_Corridors_Mix_kW.fds
+title: ATF Experiments with corridors on two floors connected by a single stairwell
+t_end_s: 900.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] ATF Experiments with corridors
+  on two floors connected by a single stairwell'
+rset_s: 120
+references:
+- exp_file: ATF_Corridors/ATF_Corridors_Pulse_avg.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: TC_A10
+  exp_initial: 24.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: A-10
+  fds_initial: 24.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: ATF_Corridors/ATF_Corridors_Pulse_avg.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: TC_B10
+  exp_initial: 24.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: B-10
+  fds_initial: 24.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: ATF_Corridors/ATF_Corridors_Pulse_avg.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: TC_C10
+  exp_initial: 24.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: C-10
+  fds_initial: 24.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: ATF_Corridors/ATF_Corridors_Pulse_avg.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: TC_D10
+  exp_initial: 24.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: D-10
+  fds_initial: 24.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: ATF_Corridors/ATF_Corridors_Pulse_avg.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: TC_E08
+  exp_initial: 24.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: E-08
+  fds_initial: 24.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: ATF_Corridors/ATF_Corridors_Pulse_avg.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: TC_F10
+  exp_initial: 24.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: F-10
+  fds_initial: 24.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+- exp_file: ATF_Corridors/ATF_Corridors_Pulse_avg.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: TC_G10
+  exp_initial: 24.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: G-10
+  fds_initial: 24.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: true
+gate3_min_fraction: 0.67
+expected_criteria_hash: null

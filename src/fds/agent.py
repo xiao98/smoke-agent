@@ -173,8 +173,20 @@ def plan(state: dict) -> dict:
 # input writer (initial + rewrite)
 # ----------------------------------------------------------------------------
 
-def _write_and_validate(spec: ScenarioSpec, case_dir: Path, run_solver: bool = True) -> tuple[str, list[str]]:
+def _extra_namelist(config: Any) -> str:
+    """FireBench injects reference &DEVC records so experiment columns exist in the agent's run."""
+    p = getattr(config, "extra_namelist_file", "") or ""
+    if not p or not Path(p).is_file():
+        return ""
+    return "
+" + Path(p).read_text(encoding="utf-8").strip() + "
+"
+
+
+def _write_and_validate(spec: ScenarioSpec, case_dir: Path, run_solver: bool = True, extra: str = "") -> tuple[str, list[str]]:
     text = writer.write(spec)
+    if extra:
+        text = text.replace("&TAIL /", extra + "&TAIL /")
     (case_dir / f"{spec.chid}.fds").write_text(text, encoding="utf-8")
     (case_dir / "spec.json").write_text(spec.model_dump_json(indent=2), encoding="utf-8")
     rep = validate.validate(spec, text, run_solver=run_solver)
@@ -186,7 +198,7 @@ def _write_and_validate(spec: ScenarioSpec, case_dir: Path, run_solver: bool = T
 def write_initial(state: dict) -> dict:
     spec = _spec_from_state(state)
     case_dir = Path(state["case_dir"])
-    text, errs = _write_and_validate(spec, case_dir)
+    text, errs = _write_and_validate(spec, case_dir, extra=_extra_namelist(state["config"]))
     print(f"<fds_writer>wrote {spec.chid}.fds ({len(text.splitlines())} lines), validate errors={len(errs)}</fds_writer>")
     return {
         "dir_structure": {".": [f"{spec.chid}.fds"]},
@@ -212,7 +224,7 @@ def rewrite(state: dict) -> dict:
     else:
         spec = ScenarioSpec.model_validate(spec_dict)
     case_dir = Path(state["case_dir"])
-    text, errs = _write_and_validate(spec, case_dir)
+    text, errs = _write_and_validate(spec, case_dir, extra=_extra_namelist(state["config"]))
     print(f"<fds_writer mode=rewrite>applied {len(patch)} patch ops, validate errors={len(errs)}</fds_writer>")
     return {
         "scenario_spec": spec.model_dump(mode="json"),

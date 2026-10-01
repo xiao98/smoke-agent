@@ -1,0 +1,32 @@
+id: nist_nrc_17
+chid: NIST_NRC_17
+group: basic
+source_dir: NIST_NRC
+source_fds: Validation/NIST_NRC/FDS_Input_Files/NIST_NRC_17.fds
+title: NIST/NRC Test 17
+t_end_s: 600.0
+requirement_status: draft
+requirement: '[DRAFT - write from the validation guide] NIST/NRC Test 17'
+rset_s: 120
+references:
+- exp_file: NIST_NRC/NIST_NRC_Test_17_file_1.csv
+  exp_col_name_row: 1
+  exp_data_row: 2
+  exp_time_col: Time
+  exp_col: Tree 1-10|Tree 2-10|Tree 3-10|Tree 5-10|Tree 6-10|Tree 7-10
+  exp_initial: 29.0
+  exp_comp:
+  - 0.0
+  - 10000.0
+  fds_col: Tr 1-10|Tr 2-10|Tr 3-10|Tr 5-10|Tr 6-10|Tr 7-10
+  fds_initial: 29.0
+  fds_comp:
+  - 0.0
+  - 10000.0
+  metric: max
+  quantity: Ceiling Jet Temperature
+  kind: ceiling_jet_temperature
+  tol_rel: 0.15
+  devc_in_source: false
+gate3_min_fraction: 0.67
+expected_criteria_hash: null
