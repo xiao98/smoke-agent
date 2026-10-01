@@ -781,7 +781,11 @@ class LLMService:
                             t = re.sub(r"\n?```\s*$", "", t).strip()
                         response = pydantic_obj.model_validate_json(t)
                     else:
-                        structured_llm = self.llm.with_structured_output(pydantic_obj)
+                        if self.model_provider.lower() == "anthropic":
+                            # Forced tool calling is not supported on claude-opus-5-5 / thinking models.
+                            structured_llm = self.llm.with_structured_output(pydantic_obj, method="json_schema")
+                        else:
+                            structured_llm = self.llm.with_structured_output(pydantic_obj)
                         response = structured_llm.invoke(messages)
                 else:
                     response = self.llm.invoke(messages)
