@@ -100,12 +100,30 @@ def gate2_run(bundle: Path, chid: str, spec: ScenarioSpec | None) -> GateResult:
     return GateResult("run", ok, detail)
 
 
-def gate3_experiment(bundle: Path, chid: str, case: dict, exp_repo: Path) -> GateResult:
+RELATIVE_FACTOR = 1.25  # agent passes a reference if its error <= 1.25 x the official input's error on the same reference
+
+
+def official_errors(official_result: Path | None) -> dict[tuple[str, str], float]:
+    """Map (fds_col, exp_file-ish index) -> rel_err from an official-mode result.json."""
+    out: dict[tuple[str, str], float] = {}
+    if not official_result or not official_result.is_file():
+        return out
+    r = json.loads(official_result.read_text())
+    for g in r.get("gates", []):
+        if g["name"] == "experiment":
+            for i, it in enumerate(g.get("items", [])):
+                if "rel_err" in it:
+                    out[(it["fds_col"], str(i))] = it["rel_err"]
+    return out
+
+
+def gate3_experiment(bundle: Path, chid: str, case: dict, exp_repo: Path, official_result: Path | None = None) -> GateResult:
     devc = bundle / f"{chid}_devc.csv"
     if not devc.is_file():
         return GateResult("experiment", False, "no _devc.csv")
+    ceiling = official_errors(official_result)
     items, n_ok = [], 0
-    for ref in case["references"]:
+    for idx, ref in enumerate(case["references"]):
         try:
             te, ve = series(exp_repo / ref["exp_file"], ref["exp_time_col"], ref["exp_col"], ref["exp_col_name_row"], ref["exp_data_row"])
             tf, vf = series(devc, "Time", ref["fds_col"], 2, 3)
@@ -118,13 +136,17 @@ def gate3_experiment(bundle: Path, chid: str, case: dict, exp_repo: Path) -> Gat
             items.append({"fds_col": ref["fds_col"], "ok": False, "why": "nan or zero reference"})
             continue
         rel = abs(mf - me) / abs(me)
-        ok = rel <= ref["tol_rel"]
+        off = ceiling.get((ref["fds_col"], str(idx)))
+        tol = max(ref["tol_rel"], RELATIVE_FACTOR * off) if off is not None else ref["tol_rel"]
+        ok = rel <= tol
         n_ok += ok
         items.append({"fds_col": ref["fds_col"], "quantity": ref["kind"], "metric": ref["metric"], "exp": round(me, 2),
-                      "fds": round(mf, 2), "rel_err": round(rel, 3), "tol": ref["tol_rel"], "ok": ok})
+                      "fds": round(mf, 2), "rel_err": round(rel, 3), "tol": round(tol, 3),
+                      "official_rel_err": None if off is None else round(off, 3), "ok": ok})
     frac = n_ok / len(items) if items else 0.0
     passed = bool(items) and frac >= float(case.get("gate3_min_fraction", 0.67))
-    return GateResult("experiment", passed, f"{n_ok}/{len(items)} references within tolerance", items)
+    basis = "vs official ceiling" if ceiling else "absolute tolerance"
+    return GateResult("experiment", passed, f"{n_ok}/{len(items)} references within tolerance ({basis})", items)
 
 
 def gate4_criteria(bundle: Path, spec: ScenarioSpec | None, thresholds: Path) -> GateResult:
@@ -141,14 +163,14 @@ def gate4_criteria(bundle: Path, spec: ScenarioSpec | None, thresholds: Path) ->
     return GateResult("criteria", True, "computed (no stored criteria.json to compare)")
 
 
-def judge(bundle: Path, case: dict, exp_repo: Path, thresholds: Path) -> dict:
+def judge(bundle: Path, case: dict, exp_repo: Path, thresholds: Path, official_result: Path | None = None) -> dict:
     chid = case["chid"] if (bundle / f"{case['chid']}.fds").is_file() else next((p.stem for p in bundle.glob("*.fds")), case["chid"])
     spec = None
     if (bundle / "spec.json").is_file():
         spec = ScenarioSpec.model_validate_json((bundle / "spec.json").read_text())
         chid = spec.chid
     gates = [gate1_init(bundle, chid), gate2_run(bundle, chid, spec),
-             gate3_experiment(bundle, chid, case, exp_repo), gate4_criteria(bundle, spec, thresholds)]
+             gate3_experiment(bundle, chid, case, exp_repo, official_result if spec else None), gate4_criteria(bundle, spec, thresholds)]
     return {"case": case["id"], "chid": chid, "mode": "agent" if spec else "official",
             "passed": all(g.passed for g in gates),
             "gates": [{"name": g.name, "passed": g.passed, "detail": g.detail, "items": g.items} for g in gates]}

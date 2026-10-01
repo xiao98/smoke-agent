@@ -109,7 +109,8 @@ def main() -> None:
             else:  # judge an existing official or agent bundle of this run tag
                 cands = [HERE / "runs" / a.run_tag / m / cid for m in ("official", "agent")]
                 bundle = next((c for c in cands if c.is_dir()), out)
-        res = judge(bundle, case, Path(a.exp_repo), thresholds)
+        official = HERE / "runs" / a.run_tag / "official" / cid / "result.json"
+        res = judge(bundle, case, Path(a.exp_repo), thresholds, official if official.is_file() else None)
         res["run_tag"], res["bundle"] = a.run_tag, str(bundle)
         out.mkdir(parents=True, exist_ok=True)
         (out / "result.json").write_text(json.dumps(res, indent=2))
