@@ -6,9 +6,23 @@ source_fds: Validation/Vettori_Flat_Ceiling/FDS_Input_Files/Vettori_OBSTRUCTED_W
 title: Obstructed Beamed Ceiling, Wall Burner Location, Fast Growth Rate Fire, Experiments
   19 and 20
 t_end_s: 100.0
-requirement_status: draft
-requirement: '[DRAFT - write from the validation guide] Obstructed Beamed Ceiling,
-  Wall Burner Location, Fast Growth Rate Fire, Experiments 19 and 20'
+requirement_status: llm_draft
+requirement: 'Modéliser un local fermé de domaine x 0..9,20 m, y 0..5,60 m, z 0..2,64
+  m, dont les cinq faces latérales et le plafond sont des parois pleines. Un socle
+  de brûleur occupe x 4,30..5,00, y 0..1,00, z 0..0,30. Le brûleur au méthane, de
+  0,60 × 0,60 m, est posé sur ce socle, contre la paroi y = 0 : x 4,30..4,90, y 0..0,60,
+  à z = 0,30. Son pic de puissance vaut environ 1055 kW (2930 kW/m²), atteint en croissance
+  t² rapide (fast) vers la fin de l''essai. Sous le plafond, une poutre principale
+  transversale s''étend sur x 0..9,20, y 2,72..2,80, z 2,22..2,40. Vingt-deux solives
+  perpendiculaires, de 0,0368 m de large, occupent z 2,40..2,64. Leur x0 vaut 0,3680
+  + k·0,4048 m, avec k = 0..21 : la première couvre x 0,3680..0,4048 et la dernière
+  x 8,8688..8,9056. Les vingt premières (k = 0..19) couvrent y 0..5,60 et les deux
+  dernières (x0 = 8,4640 et 8,8688) seulement y 0..2,80. La seule ouverture permanente
+  est une trémie au plafond, x 8,30..9,20, y 2,90..5,60, à z = 2,64. Il n''y a aucune
+  extraction mécanique. Le maillage uniforme compte 96 × 54 × 30 mailles, soit une
+  maille d''environ 0,10 m. La durée simulée est de 100 s. Un chemin d''évacuation
+  plausible à 1,8 m de hauteur relierait (1,0 ; 4,5 ; 1,8), (4,5 ; 3,5 ; 1,8) et (8,7
+  ; 4,2 ; 1,8).'
 rset_s: 120
 references:
 - exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_19.csv

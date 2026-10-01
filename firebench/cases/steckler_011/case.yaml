@@ -5,9 +5,22 @@ source_dir: Steckler_Compartment
 source_fds: Validation/Steckler_Compartment/FDS_Input_Files/Steckler_011.fds
 title: Steckler Compartment, Test 11
 t_end_s: 1800.0
-requirement_status: draft
-requirement: '[DRAFT - write from the validation guide] Steckler Compartment, Test
-  11'
+requirement_status: llm_draft
+requirement: 'Modéliser l''essai Steckler n° 11 dans un domaine de x 0,00 à 3,60 m,
+  y -1,40 à 1,40 m, z 0,00 à 2,13 m, avec un maillage uniforme de 0,05 m (72 × 56
+  × 44 cellules) et une durée de simulation de 1800 s. Le compartiment est fermé côté
+  aval par un mur plein (obstruction) de x 2,80 à 2,90 m, y -1,40 à 1,40 m, z 0,00
+  à 2,13 m. Ce mur est percé d''une porte (trou) de x 2,75 à 2,95 m, y -0,18 à 0,18
+  m, z 0,00 à 1,83 m. Placer le foyer au sol, au centre de la pièce (position A) :
+  un brûleur rectangulaire de x 1,25 à 1,55 m, y -0,10 à 0,10 m, à z = 0,00 m, soit
+  environ 0,06 m², d''une puissance de 62,9 kW, constante dès le début, sans phase
+  de croissance. La zone située à l''extérieur, au-delà du mur (x 2,90 à 3,60 m),
+  communique librement avec l''ambiance par des ouvertures permanentes : la face x
+  = 3,60 m en entier, les faces y = -1,40 m et y = 1,40 m pour x 2,90 à 3,60 m et
+  z 0,00 à 2,13 m, et le plafond z = 2,13 m pour x 2,90 à 3,60 m et y -1,40 à 1,40
+  m. Il n''y a aucune extraction mécanique. Un chemin d''évacuation plausible à 1,8
+  m de hauteur part de (0,50 ; 0,80 ; 1,80), passe par (2,50 ; 0,00 ; 1,80) puis franchit
+  la porte jusqu''à (3,40 ; 0,00 ; 1,80).'
 rset_s: 120
 references:
 - exp_file: Steckler_Compartment/Steckler_Test_11_layer.csv

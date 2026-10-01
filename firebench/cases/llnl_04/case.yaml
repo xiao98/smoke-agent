@@ -5,9 +5,24 @@ source_dir: LLNL_Enclosure
 source_fds: Validation/LLNL_Enclosure/FDS_Input_Files/LLNL_04.fds
 title: 1986 LLNL Enclosure Fire Test 04
 t_end_s: 600.0
-requirement_status: draft
-requirement: '[DRAFT - write from the validation guide] 1986 LLNL Enclosure Fire Test
-  04'
+requirement_status: llm_draft
+requirement: 'Modéliser l''essai LLNL 04 : une enceinte fermée de 6 × 4 × 4,5 m, domaine
+  x0..x1 = 0..6, y0..y1 = 0..4, z0..z1 = 0..4,5 m. Les parois du domaine sont pleines.
+  Le faux plafond et la porte (x 4,4..5,2, y = 0, z 0..2) sont commentés dans l''input
+  officiel, donc on ne les modélise pas et la porte reste fermée. Le brûleur est un
+  bloc x 2,7..3,2, y 1,8..2,2, z 0..0,2, dont la face supérieure de 0,2 m² brûle du
+  méthane. Le feu atteint 300 kW (1500 kW/m²) par une rampe linéaire de 0 à 30 s,
+  puis reste constant. Avec une croissance « ultrafast », on atteint 300 kW vers 40
+  s, ce qui en est l''approximation la plus proche. Ajouter le conduit d''arrivée
+  d''air comme deux obstructions : une branche horizontale x 0,7..1,0, y 0..2,0, z
+  0,6..0,9, puis une descente x 0,7..1,0, y 1,6..2,0, z 0,3..0,6. Ce conduit est passif
+  et relié à l''extérieur, sans ventilateur. On le représente par une ouverture permanente
+  sur la paroi y = 0, en x 0,7..1,0 et z 0,6..0,9. La bouche « EXHAUST » (x = 6, y
+  1,6..2,4, z 3,3..3,9) n''a aucun débit dans l''input officiel : la traiter comme
+  fermée, sans extraction mécanique. Les fuites de l''enveloppe sont négligées. Utiliser
+  un maillage uniforme de 0,15 m (40 × 27 × 30 mailles) et simuler 600 s à partir
+  de l''allumage. Un chemin d''évacuation plausible à 1,8 m de hauteur relie (0,5
+  ; 3,5 ; 1,8) à (3,0 ; 3,3 ; 1,8) puis à la porte en (4,8 ; 0,3 ; 1,8).'
 rset_s: 120
 references:
 - exp_file: LLNL_Enclosure/LLNL_04.csv

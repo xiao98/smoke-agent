@@ -1,0 +1,11 @@
+# FireBench basic group: 10 building-smoke cases ordered by cost (cheapest first)
+vettori_smooth_open_fast
+vettori_obstructed_wall_fast
+llnl_03
+llnl_04
+steckler_010
+steckler_011
+ul_nist_vents_test_2
+nbs_100a
+nbs_100o
+nbs_100z

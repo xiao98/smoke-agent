@@ -5,9 +5,23 @@ source_dir: LLNL_Enclosure
 source_fds: Validation/LLNL_Enclosure/FDS_Input_Files/LLNL_03.fds
 title: 1986 LLNL Enclosure Fire Test 03
 t_end_s: 500.0
-requirement_status: draft
-requirement: '[DRAFT - write from the validation guide] 1986 LLNL Enclosure Fire Test
-  03'
+requirement_status: llm_draft
+requirement: 'Simuler l''essai d''incendie en enceinte LLNL n° 03 (1986) : un local
+  fermé de 6 m × 4 m × 4,5 m, dont le domaine va de x0=0 à x1=6, y0=0 à y1=4 et z0=0
+  à z1=4,5. Le brûleur est un bloc de 0,2 m de haut (x 2,7..3,2 ; y 1,8..2,2 ; z 0,0..0,2),
+  dont la face supérieure de 0,2 m² est la source. Sa puissance maximale est de 400
+  kW (2000 kW/m²), atteinte en 30 s par une montée linéaire ; utiliser une croissance
+  ultrarapide (ultrafast) comme approximation la plus proche, puis maintenir le palier.
+  Prévoir une gaine d''admission en deux blocs : x 0,7..1,0 ; y 0,0..2,0 ; z 0,6..0,9,
+  puis x 0,7..1,0 ; y 1,6..2,0 ; z 0,3..0,6. La porte est fermée et il n''y a aucune
+  ouverture permanente. La bouche d''extraction sur la paroi x=6 (y 1,6..2,4 ; z 3,3..0,9
+  → z 3,3..3,9) est déclarée sans débit dans l''entrée officielle, donc elle est inactive.
+  L''air n''entre que par cette gaine de 0,30 m de diamètre reliée à l''extérieur
+  et par des fuites d''environ 0,0033 m². Représenter cette admission par une petite
+  ouverture permanente de 0,3 m × 0,3 m sur la paroi y=0 (x 0,7..1,0 ; z 0,6..0,9).
+  Utiliser un maillage uniforme de 0,15 m et une durée de 500 s. Le chemin d''évacuation
+  plausible, à 1,8 m de hauteur, va de (1,0 ; 3,5 ; 1,8) à (3,0 ; 3,3 ; 1,8), puis
+  à (4,8 ; 0,2 ; 1,8), vers l''emplacement de la porte.'
 rset_s: 120
 references:
 - exp_file: LLNL_Enclosure/LLNL_03.csv
