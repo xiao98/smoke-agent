@@ -140,12 +140,20 @@ def evaluate(bundle_dir: Path, spec: ScenarioSpec, thresholds: dict, hrr_peak_si
         paths.append(PathResult(id=p.id, rset_s=p.rset_s, aset_s=aset, censored=censored,
                                 margin=margin, passed=passed, quantities=qres))
     peak_sim = hrr_peak_sim if hrr_peak_sim is not None else read_hrr_peak(bundle_dir / f"{spec.chid}_hrr.csv")
-    hrr = HrrCheck(peak_kw_set=spec.fire.hrr_peak_kw, peak_kw_sim=peak_sim,
-                   ok=abs(peak_sim - spec.fire.hrr_peak_kw) <= HRR_TOL * spec.fire.hrr_peak_kw)
+    expected = expected_hrr_peak(spec, t_end)
+    hrr = HrrCheck(peak_kw_set=expected, peak_kw_sim=peak_sim, ok=abs(peak_sim - expected) <= HRR_TOL * expected)
     return CriteriaResult(chid=spec.chid, thresholds_profile=spec.thresholds_profile, t_end_s=t_end, paths=paths, hrr_check=hrr)
 
 
 HRR_TOL = 0.10        # relative tolerance on the smoothed peak
+
+
+def expected_hrr_peak(spec: ScenarioSpec, t_end: float) -> float:
+    """Peak HRR the ramp can reach by t_end (t-squared growth may not reach the plateau)."""
+    tp = spec.fire.time_to_peak_s()
+    if tp <= 0 or t_end >= tp:
+        return spec.fire.hrr_peak_kw
+    return spec.fire.hrr_peak_kw * (t_end / tp) ** 2
 HRR_WINDOW_S = 10.0   # moving-average window; FDS instantaneous HRR fluctuates
 
 
