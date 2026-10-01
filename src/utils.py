@@ -20,7 +20,8 @@ import random
 from botocore.exceptions import ClientError
 import shutil
 from config import Config
-from openfoam_target import database_path_for_config, require_target_corpus
+# SmokeAgent: route database/corpus resolution through the solver-level target.
+from solver_target import database_path as database_path_for_config, require_corpus as require_target_corpus
 from langchain_ollama import ChatOllama
 try:
     from langchain_huggingface import HuggingFaceEmbeddings
