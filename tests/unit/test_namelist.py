@@ -46,7 +46,8 @@ def test_dump_roundtrip_small():
 def test_roundtrip_validation_files(path):
     text = pathlib.Path(path).read_text(errors="replace")
     recs = parse(text)
-    assert records_of(recs, "HEAD"), path
-    assert records_of(recs, "TAIL"), path
+    # &TAIL is optional in FDS and &CATF fragments have no &HEAD, so only the
+    # semantic round-trip is asserted.
+    assert recs, path
     again = parse(dump(recs))
     assert [(r.group, r.params) for r in again] == [(r.group, r.params) for r in recs]

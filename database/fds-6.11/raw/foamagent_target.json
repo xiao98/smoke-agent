@@ -1,0 +1,7 @@
+{
+  "solver_target": "fds-6.11",
+  "solver": "fds",
+  "fds_version": "6.11",
+  "source": "firemodels/fds Validation (39 dirs)",
+  "n_cases": 339
+}

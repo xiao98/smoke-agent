@@ -187,3 +187,4 @@ cython_debug/
 __pycache__/
 *.pyc
 runs/
+database/fds-6.11/faiss/

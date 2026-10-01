@@ -44,6 +44,8 @@ class Config:
     # An explicit target is additive.  Leaving it empty keeps the existing
     # Foundation/generic-ESI routing exactly as it was before v2006 support.
     openfoam_target: str = ""
+    # Solver-level target (SmokeAgent). "fds-6.11" routes to src/fds; empty keeps OpenFOAM behaviour.
+    solver_target: str = ""
     
     # Embedding Configuration
     embedding_provider: str = "huggingface"  # [openai, huggingface, ollama]
@@ -62,6 +64,11 @@ class Config:
                 return None
             v = v.strip()
             return v if v else None
+
+        solver_env = _env_nonempty("FOAMAGENT_SOLVER_TARGET")
+        if solver_env is not None:
+            self.solver_target = solver_env
+            print(f"<config>solver_target={self.solver_target} (env:FOAMAGENT_SOLVER_TARGET)</config>")
 
         # LLM provider/model overrides
         provider_key = "FOAMAGENT_MODEL_PROVIDER"

@@ -1,0 +1,35 @@
+fds <chid>.fds
+mpiexec -n <N> fds <chid>.fds
+fds <chid>.fds with &TIME T_END=0 /
+smokeview -runscript <chid>
+fds2ascii
+&BNDF
+&CATF
+&COMB
+&CTRL
+&DEVC
+&DUMP
+&HEAD
+&HOLE
+&HVAC
+&INIT
+&MATL
+&MESH
+&MISC
+&MULT
+&OBST
+&PART
+&PRES
+&PROP
+&RADI
+&RAMP
+&REAC
+&SLCF
+&SPEC
+&SURF
+&TABL
+&TAIL
+&TIME
+&TRNZ
+&VENT
+&ZONE
