@@ -104,7 +104,11 @@ def main() -> None:
                 print(f"skip {cid}: requirement still a draft"); continue
             bundle = run_agent(case, out, a.omp, a.timeout, a.max_loop)
         else:
-            bundle = Path(a.bundle) if a.bundle else out
+            if a.bundle:
+                bundle = Path(a.bundle)
+            else:  # judge an existing official or agent bundle of this run tag
+                cands = [HERE / "runs" / a.run_tag / m / cid for m in ("official", "agent")]
+                bundle = next((c for c in cands if c.is_dir()), out)
         res = judge(bundle, case, Path(a.exp_repo), thresholds)
         res["run_tag"], res["bundle"] = a.run_tag, str(bundle)
         out.mkdir(parents=True, exist_ok=True)
