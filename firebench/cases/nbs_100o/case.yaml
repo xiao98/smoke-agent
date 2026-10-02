@@ -7,8 +7,8 @@ title: NBS Multiroom Test 100O
 t_end_s: 1200.0
 requirement_status: llm_draft
 requirement: Simuler l'essai multipièces NBS 100O dans un domaine x 0–12,2, y 0–5,8,
-  z 0–2,4 m, avec une maille uniforme de 0,1 m et une durée de 1200 s. Remplir en
-  solide la zone hors maillage x 0–9,8, y 0–3,4, z 0–2,4, ainsi que le volume x 9,8–12,2,
+  z 0–2,4 m, avec une maille uniforme de 0,1 m et une durée de 950 s. Remplir en solide
+  la zone hors maillage x 0–9,8, y 0–3,4, z 0–2,4, ainsi que le volume x 9,8–12,2,
   y 0–3,4, z 2,2–2,4 situé au-dessus de la chambre de feu, dont le plafond est à 2,2
   m. Le couloir occupe x 0–12,2, y 3,4–5,8, z 0–2,4. Dans la chambre de feu, ajouter
   un bloc plein x 9,8–11,1, y 2,3–3,4, z 0–2,2 et une retombée de plafond x 11,1–12,2,
@@ -176,3 +176,4 @@ references:
   devc_in_source: true
 gate3_min_fraction: 0.67
 expected_criteria_hash: null
+t_end_hint_s: 950

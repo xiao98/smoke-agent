@@ -8,7 +8,7 @@ t_end_s: 1800.0
 requirement_status: llm_draft
 requirement: 'Modéliser l''essai de désenfumage NIST/UL n°2 dans un domaine x 0,00..6,10,
   y -1,10..4,30, z 0,00..4,00 m, avec un maillage uniforme de 0,10 m et une durée
-  de 1800 s. Les faces x=0, x=6,10 et y=4,30 sont des parois fermées, et le sol en
+  de 950 s. Les faces x=0, x=6,10 et y=4,30 sont des parois fermées, et le sol en
   z=0 est plein. La pièce est fermée par un mur de façade x 0,00..6,10, y -0,10..0,00,
   z 0,00..2,40, percé d''une porte x 4,30..5,20, y -0,20..0,10, z 0,00..2,10. Le plafond
   est une dalle x 0,00..6,10, y -0,10..4,30, z 2,40..2,50, percée d''un exutoire x
@@ -141,3 +141,4 @@ references:
   devc_in_source: true
 gate3_min_fraction: 0.67
 expected_criteria_hash: null
+t_end_hint_s: 950
