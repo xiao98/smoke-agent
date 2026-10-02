@@ -85,3 +85,9 @@ def test_hrr_curve():
     ramps = [r for r in records_of(recs, "RAMP") if r.get("ID") == "fire_ramp"]
     assert [r.floats("T")[0] for r in ramps] == [0, 20, 100, 300]
     assert abs(ramps[1].floats("F")[0] - 350 / 1055) < 1e-3
+
+
+def test_surf_id_coerced():
+    b = dict(THREE_ROOMS["building"]); b = {**b, "obstructions": [{"id": "beam", "xb": [0, 9, 2.7, 2.8, 2.2, 2.4], "surf_id": "STEEL BEAM"}]}
+    spec = ScenarioSpec(**dict(THREE_ROOMS, building=b))
+    assert spec.building.obstructions[0].surf_id == "INERT"

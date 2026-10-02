@@ -30,9 +30,14 @@ class Hole(BaseModel):
 class Obstruction(BaseModel):
     id: str
     xb: XB
-    surf_id: str = "INERT"
+    surf_id: str = "INERT"  # only INERT is defined in generated files; anything else is coerced
     holes: list[Hole] = Field(default_factory=list)
     _v = field_validator("xb")(_check_xb)
+
+    @field_validator("surf_id")
+    @classmethod
+    def _inert_only(cls, v):
+        return "INERT"
 
 
 class Opening(BaseModel):

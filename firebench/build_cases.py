@@ -88,6 +88,26 @@ def main() -> None:
             print(f"skip {key}: no input file"); continue
         recs = parse(src.read_text(errors="replace"))
         devc_by_id = {r.get("ID"): r for r in records_of(recs, "DEVC") if r.get("ID")}
+        ctrl_by_id = {r.get("ID"): r for r in records_of(recs, "CTRL") if r.get("ID")}
+        prop_by_id = {r.get("ID"): r for r in records_of(recs, "PROP") if r.get("ID")}
+
+        def closure(seed: list) -> list:
+            """DEVC/CTRL/PROP records needed so the seed devices are self-contained."""
+            out, seen, todo = [], set(), list(seed)
+            while todo:
+                r = todo.pop()
+                key = (r.group, r.get("ID"))
+                if key in seen:
+                    continue
+                seen.add(key); out.append(r)
+                for k in ("CTRL_ID", "INPUT_ID", "PROP_ID", "DEVC_ID"):
+                    for ref_id in r.params.get(k, []):
+                        for table in (ctrl_by_id, devc_by_id, prop_by_id):
+                            if ref_id in table:
+                                todo.append(table[ref_id])
+            # PROP first, then CTRL, then DEVC (FDS does not care, but keeps the file readable)
+            order = {"PROP": 0, "CTRL": 1, "DEVC": 2}
+            return sorted(out, key=lambda r: order.get(r.group, 3))
         head = records_of(recs, "HEAD")
         title = head[0].get("TITLE", "") if head else ""
         t_end = records_of(recs, "TIME")[0].floats("T_END")[0] if records_of(recs, "TIME") else None
@@ -130,7 +150,7 @@ def main() -> None:
             continue
         case_dir = out / chid.lower()
         case_dir.mkdir(parents=True, exist_ok=True)
-        (case_dir / "reference_devc.fds").write_text(dump(ref_devc), encoding="utf-8")
+        (case_dir / "reference_devc.fds").write_text(dump(closure(ref_devc)), encoding="utf-8")
         case = {
             "id": chid.lower(),
             "chid": chid,

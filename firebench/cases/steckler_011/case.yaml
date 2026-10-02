@@ -8,7 +8,7 @@ t_end_s: 1800.0
 requirement_status: llm_draft
 requirement: 'Modéliser l''essai Steckler n° 11 dans un domaine de x 0,00 à 3,60 m,
   y -1,40 à 1,40 m, z 0,00 à 2,13 m, avec un maillage uniforme de 0,05 m (72 × 56
-  × 44 cellules) et une durée de simulation de 1800 s. Le compartiment est fermé côté
+  × 44 cellules) et une durée de simulation de 400 s. Le compartiment est fermé côté
   aval par un mur plein (obstruction) de x 2,80 à 2,90 m, y -1,40 à 1,40 m, z 0,00
   à 2,13 m. Ce mur est percé d''une porte (trou) de x 2,75 à 2,95 m, y -0,18 à 0,18
   m, z 0,00 à 1,83 m. Placer le foyer au sol, au centre de la pièce (position A) :
@@ -44,3 +44,4 @@ references:
   devc_in_source: true
 gate3_min_fraction: 0.67
 expected_criteria_hash: null
+t_end_hint_s: 400

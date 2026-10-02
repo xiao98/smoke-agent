@@ -19,7 +19,7 @@ requirement: 'Simuler l''essai 10 de Steckler : un petit local avec un feu de m�
   Côté extérieur, le domaine est ouvert en permanence sur quatre faces : toute la
   face x = 3,60, la face y = -1,40 pour x 2,90..3,60 et z 0,00..2,13, la face y =
   1,40 sur la même plage, et le plafond z = 2,13 pour x 2,90..3,60 et y -1,40..1,40.
-  Il n''y a aucune extraction mécanique. La durée simulée est de 1800 s. Comme chemin
+  Il n''y a aucune extraction mécanique. La durée simulée est de 400 s. Comme chemin
   d''évacuation plausible à 1,8 m de hauteur, on peut partir du fond du local en (0,50
   ; 1,00 ; 1,80), passer par (2,50 ; 0,00 ; 1,80) puis franchir la porte jusqu''à
   (3,30 ; 0,00 ; 1,80) à l''extérieur.'
@@ -46,3 +46,4 @@ references:
   devc_in_source: true
 gate3_min_fraction: 0.67
 expected_criteria_hash: null
+t_end_hint_s: 400
