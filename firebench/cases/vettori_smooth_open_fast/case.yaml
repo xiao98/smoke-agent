@@ -7,22 +7,21 @@ title: Smooth Flat Ceiling, Open Burner Location, Fast Growth Rate Fire, Experim
   1, 2, and 3
 t_end_s: 100.0
 requirement_status: llm_draft
-requirement: 'Simuler l''essai Vettori (plafond lisse, brûleur dégagé, feu à croissance
-  rapide) dans un domaine parallélépipédique x 0,0..9,20 m, y 0,0..5,60 m, z 0,0..2,44
-  m, avec un maillage uniforme d''environ 0,1 m. L''input officiel utilise 96 × 54
-  × 30 cellules, soit environ 0,096 × 0,104 × 0,081 m. Ajouter deux obstructions.
-  La première est un socle de brûleur en x 4,30..5,00, y 1,00..2,00, z 0,00..0,30.
-  La seconde est une poutre traversant toute la longueur en x 0,00..9,20, y 2,72..2,80,
-  z 2,22..2,40. Le foyer est un brûleur au méthane posé sur le socle, d''emprise x
-  4,30..4,90, y 1,00..1,60 à z = 0,30 m (0,36 m²). Sa puissance maximale est d''environ
-  1055 kW (2930 kW/m²), avec une croissance de type « fast ». Dans l''input officiel,
-  la rampe atteint presque 100 % de la puissance à 100 s. L''input officiel déclare
-  aussi une ouverture libre en x 8,30..9,20, y 2,90..5,60 à z = 2,64 m. Elle se trouve
-  au-dessus du plafond du domaine (2,44 m) et reste donc inactive : traiter le local
-  comme fermé, sans ouverture permanente sur les limites ni extraction mécanique.
-  La durée de la simulation est de 100 s. Un chemin d''évacuation plausible à 1,8
-  m de hauteur va de (1,0 ; 4,5 ; 1,8) à (5,0 ; 4,5 ; 1,8) puis à (8,7 ; 4,5 ; 1,8),
-  du côté opposé au brûleur.'
+requirement: 'Simuler l''essai Vettori (plafond lisse, brûleur en position ouverte,
+  croissance rapide) dans un domaine x 0..9,20 m, y 0..5,60 m, z 0..2,44 m, avec des
+  parois fermées et une maille uniforme d''environ 0,1 m (96 × 54 × 30 cellules).
+  Placer un bloc support de x 4,30..5,00, y 1,00..2,00, z 0..0,30, ainsi qu''une poutre
+  en acier traversant toute la largeur : x 0..9,20, y 2,72..2,80, z 2,22..2,40. Le
+  brûleur au méthane occupe x 4,30..4,90, y 1,00..1,60 sur le dessus du bloc (z =
+  0,30), avec un pic d''environ 1055 kW. La courbe tabulée de l''input officiel donne
+  : 0 s : 0 kW, 5 s : 57 kW, 10 s : 75 kW, 15 s : 110 kW, 20 s : 127 kW, 25 s : 163
+  kW, 30 s : 173 kW, 35 s : 192 kW, 40 s : 196 kW, 45 s : 216 kW, 50 s : 271 kW, 55
+  s : 309 kW, 60 s : 379 kW, 65 s : 443 kW, 70 s : 515 kW, 75 s : 592 kW, 80 s : 673
+  kW, 85 s : 759 kW, 90 s : 852 kW, 95 s : 949 kW, 100 s : 1053 kW. Prévoir une ouverture
+  permanente au plafond de x 8,30..9,20, y 2,90..5,60. L''input officiel la situe
+  à z = 2,64, donc au-dessus du domaine : la placer au plafond (z = 2,44). Aucune
+  extraction mécanique. Durée : 100 s. Un chemin d''évacuation plausible à 1,8 m de
+  hauteur relie (1,0 ; 4,5) à (4,6 ; 4,0) puis à (8,7 ; 4,2).'
 rset_s: 120
 references:
 - exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_01.csv

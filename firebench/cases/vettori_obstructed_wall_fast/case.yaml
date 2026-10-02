@@ -7,22 +7,22 @@ title: Obstructed Beamed Ceiling, Wall Burner Location, Fast Growth Rate Fire, E
   19 and 20
 t_end_s: 100.0
 requirement_status: llm_draft
-requirement: 'Modéliser un local fermé de domaine x 0..9,20 m, y 0..5,60 m, z 0..2,64
-  m, dont les cinq faces latérales et le plafond sont des parois pleines. Un socle
-  de brûleur occupe x 4,30..5,00, y 0..1,00, z 0..0,30. Le brûleur au méthane, de
-  0,60 × 0,60 m, est posé sur ce socle, contre la paroi y = 0 : x 4,30..4,90, y 0..0,60,
-  à z = 0,30. Son pic de puissance vaut environ 1055 kW (2930 kW/m²), atteint en croissance
-  t² rapide (fast) vers la fin de l''essai. Sous le plafond, une poutre principale
-  transversale s''étend sur x 0..9,20, y 2,72..2,80, z 2,22..2,40. Vingt-deux solives
-  perpendiculaires, de 0,0368 m de large, occupent z 2,40..2,64. Leur x0 vaut 0,3680
-  + k·0,4048 m, avec k = 0..21 : la première couvre x 0,3680..0,4048 et la dernière
-  x 8,8688..8,9056. Les vingt premières (k = 0..19) couvrent y 0..5,60 et les deux
-  dernières (x0 = 8,4640 et 8,8688) seulement y 0..2,80. La seule ouverture permanente
-  est une trémie au plafond, x 8,30..9,20, y 2,90..5,60, à z = 2,64. Il n''y a aucune
-  extraction mécanique. Le maillage uniforme compte 96 × 54 × 30 mailles, soit une
-  maille d''environ 0,10 m. La durée simulée est de 100 s. Un chemin d''évacuation
-  plausible à 1,8 m de hauteur relierait (1,0 ; 4,5 ; 1,8), (4,5 ; 3,5 ; 1,8) et (8,7
-  ; 4,2 ; 1,8).'
+requirement: 'Modéliser un local de x 0..9,20, y 0..5,60, z 0..2,64 m avec un maillage
+  uniforme d''environ 0,1 m (96×54×30 cellules) et une durée de 100 s. Les parois
+  du domaine sont fermées. La seule ouverture permanente se trouve au plafond : x
+  8,30..9,20, y 2,90..5,60, z = 2,64. Le brûleur au méthane, de x 4,30..4,90, y 0,00..0,60
+  à z = 0,30, repose sur un bloc de x 4,30..5,00, y 0,00..1,00, z 0,00..0,30 placé
+  contre le mur y = 0. Sa puissance de pointe est de 1055 kW et sa croissance suit
+  cette rampe : 0 s : 0 kW, 5 s : 57 kW, 10 s : 75 kW, 15 s : 110 kW, 20 s : 127 kW,
+  25 s : 163 kW, 30 s : 173 kW, 35 s : 192 kW, 40 s : 196 kW, 45 s : 216 kW, 50 s
+  : 271 kW, 55 s : 309 kW, 60 s : 379 kW, 65 s : 443 kW, 70 s : 515 kW, 75 s : 592
+  kW, 80 s : 673 kW, 85 s : 759 kW, 90 s : 852 kW, 95 s : 949 kW, 100 s : 1053 kW.
+  Une poutre transversale occupe x 0..9,20, y 2,72..2,80, z 2,22..2,40. Le plafond
+  porte 22 solives de 0,0368 m de large, à z 2,40..2,64. Leur bord gauche est placé
+  en x = 0,368 + n×0,4048 m (n = 0..21). Les vingt premières couvrent y 0..5,60 et
+  les deux dernières, en x 8,4640..8,5008 et 8,8688..8,9056, couvrent seulement y
+  0..2,80. Un chemin d''évacuation plausible à 1,8 m de hauteur va de (1,0 ; 1,5 ;
+  1,8) à (8,75 ; 4,25 ; 1,8) en passant par (4,6 ; 4,0 ; 1,8).'
 rset_s: 120
 references:
 - exp_file: Vettori_Flat_Ceiling/Vettori_Flat_Ceiling_Test_19.csv
