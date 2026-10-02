@@ -73,3 +73,15 @@ def test_explicit_time_to_peak():
     recs = parse(write(spec))
     ramps = [r for r in records_of(recs, "RAMP") if r.get("ID") == "fire_ramp"]
     assert any(abs(r.floats("T")[0] - 100) < 1e-6 and r.floats("F")[0] == 1.0 for r in ramps)
+
+
+def test_hrr_curve():
+    fire = {"location_xb": [1.5, 2.5, 1.75, 2.25, 0, 0], "hrr_peak_kw": 1, "growth": "fast",
+            "hrr_curve": [[0, 0], [20, 350], [100, 1055], [300, 1055]]}
+    spec = ScenarioSpec(**dict(THREE_ROOMS, fire=fire))
+    assert spec.fire.hrr_peak_kw == 1055 and spec.fire.t_peak() == 100
+    assert abs(spec.fire.hrr_at(60) - (350 + (1055 - 350) * 40 / 80)) < 1e-6
+    recs = parse(write(spec))
+    ramps = [r for r in records_of(recs, "RAMP") if r.get("ID") == "fire_ramp"]
+    assert [r.floats("T")[0] for r in ramps] == [0, 20, 100, 300]
+    assert abs(ramps[1].floats("F")[0] - 350 / 1055) < 1e-3

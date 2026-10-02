@@ -159,7 +159,7 @@ def expected_hrr_peak(spec: ScenarioSpec, t_end: float, window_s: float = HRR_WI
     if tp <= 0 or t_end >= tp + window_s:
         return spec.fire.hrr_peak_kw
     t_mid = max(0.0, t_end - window_s / 2)
-    return spec.fire.hrr_peak_kw * min(1.0, t_mid / tp) ** 2
+    return spec.fire.hrr_at(t_mid)
 
 
 def hrr_tolerance(spec: ScenarioSpec, t_end: float) -> float:

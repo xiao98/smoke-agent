@@ -99,6 +99,7 @@ Translate the user's request into a ScenarioSpec JSON. Rules:
 - The domain must enclose every obstruction, the fire footprint and all escape-path points.
 - The fire footprint is a horizontal rectangle (z0 == z1) on the floor or on top of an obstruction. Keep HRRPUA = peak/area between 250 and 2500 kW/m2.
 - Fire growth: use `growth` (slow/medium/fast/ultrafast/constant, NFPA t-squared). If the request states when the peak is reached (e.g. "100% at 100 s", "rise in 10 s"), ALSO set `time_to_peak_s` to that value; it overrides the t-squared coefficient.
+- If the request gives a design-fire curve (HRR values at several times, or a ramp table), transcribe it as `hrr_curve: [[t_s, kW], ...]` in absolute kW; it overrides growth. Set hrr_peak_kw to the curve maximum.
 - Walls are thin obstructions (0.2 m); doors are holes through them (height ~2.0 m).
 - Openings to the outside are planar vents on the domain boundary.
 - Mechanical exhaust: planar vent on the ceiling (z0 == z1 == domain z max) with volume flow in m3/s; make-up air refers to an opening id.

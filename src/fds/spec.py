@@ -92,8 +92,46 @@ class Fire(BaseModel):
     # Explicit time to reach the peak (s). Overrides the NFPA alpha of `growth`;
     # use it when the source states "peak reached at N s".
     time_to_peak_s: Optional[float] = Field(None, gt=0)
+    # Explicit design-fire curve [[t_s, kW], ...]; overrides growth/time_to_peak. hrr_peak_kw is set to its max.
+    hrr_curve: Optional[list[list[float]]] = None
     fuel: Fuel = Field(default_factory=Fuel)
     _v = field_validator("location_xb")(_check_xb)
+
+    @field_validator("hrr_curve")
+    @classmethod
+    def _curve(cls, v):
+        if v is None:
+            return v
+        if len(v) < 2 or any(len(p) != 2 for p in v):
+            raise ValueError("hrr_curve needs >= 2 points of [t_s, kW]")
+        ts = [p[0] for p in v]
+        if ts != sorted(ts) or ts[0] < 0 or any(p[1] < 0 for p in v):
+            raise ValueError("hrr_curve times must be increasing and values non-negative")
+        return v
+
+    @model_validator(mode="after")
+    def _peak_matches_curve(self):
+        if self.hrr_curve:
+            peak = max(p[1] for p in self.hrr_curve)
+            if peak <= 0:
+                raise ValueError("hrr_curve has no positive value")
+            self.hrr_peak_kw = float(peak)
+        return self
+
+    def hrr_at(self, t: float) -> float:
+        """HRR (kW) prescribed at time t: curve (linear interpolation), t-squared ramp, or constant."""
+        if self.hrr_curve:
+            pts = self.hrr_curve
+            if t <= pts[0][0]:
+                return float(pts[0][1])
+            for (t0, q0), (t1, q1) in zip(pts, pts[1:]):
+                if t0 <= t <= t1:
+                    return float(q0 + (q1 - q0) * (t - t0) / (t1 - t0)) if t1 > t0 else float(q1)
+            return float(pts[-1][1])
+        tp = self.t_peak()
+        if tp <= 0:
+            return self.hrr_peak_kw
+        return self.hrr_peak_kw * min(1.0, t / tp) ** 2
 
     @property
     def area_m2(self) -> float:
@@ -101,6 +139,8 @@ class Fire(BaseModel):
         return (x1 - x0) * (y1 - y0)
 
     def t_peak(self) -> float:
+        if self.hrr_curve:
+            return float(max(self.hrr_curve, key=lambda p: p[1])[0])
         if self.growth == "constant":
             return 0.0
         if self.time_to_peak_s:

@@ -58,6 +58,12 @@ def mesh_records(spec: ScenarioSpec) -> tuple[list[Record], float]:
 
 def ramp_records(spec: ScenarioSpec) -> list[Record]:
     f = spec.fire
+    if f.hrr_curve:
+        pk = f.hrr_peak_kw
+        pts = [(float(t), float(q) / pk) for t, q in f.hrr_curve]
+        if pts[0][0] > 0:
+            pts.insert(0, (0.0, pts[0][1]))
+        return [Record("RAMP", {"ID": ["fire_ramp"], "T": [_f(t)], "F": [_f(v)]}) for t, v in pts]
     if f.growth == "constant":
         return []
     tp = f.t_peak()
@@ -86,7 +92,7 @@ def write(spec: ScenarioSpec) -> str:
     # Fire: a 0.1 m slab whose top face burns at HRRPUA = peak / area
     hrrpua = spec.fire.hrr_peak_kw / spec.fire.area_m2
     surf = {"ID": ["FIRE"], "HRRPUA": [_f(hrrpua)], "COLOR": ["RED"]}
-    if spec.fire.growth != "constant":
+    if spec.fire.hrr_curve or spec.fire.growth != "constant":
         surf["RAMP_Q"] = ["fire_ramp"]
     recs.append(Record("SURF", surf))
     recs += ramp_records(spec)

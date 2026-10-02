@@ -28,7 +28,9 @@ simulations. The assistant can only model: a box domain; rectangular obstruction
 with rectangular holes (doors, windows); a rectangular burner footprint with peak HRR and t-squared growth (slow/medium/
 fast/ultrafast/constant); permanently open vents on the domain boundary; mechanical exhaust vents with a volume flow;
 evacuation paths as polylines; a uniform mesh cell size; a duration. Describe the official FDS input in those terms:
-give every coordinate explicitly in metres (x0..x1, y0..y1, z0..z1), the fire HRR in kW and its growth, the ambient
+give every coordinate explicitly in metres (x0..x1, y0..y1, z0..z1), the fire HRR in kW and its growth, and when the
+official input defines the burner with a RAMP (RAMP_Q or a time table), transcribe that curve as absolute HRR values at
+each ramp time (e.g. "0 s: 0 kW, 20 s: 350 kW, 100 s: 1055 kW"), the ambient
 openings, the mesh cell size that the official input uses, and the simulation duration. Do not mention material
 properties, radiation settings or devices. Finish with one sentence naming a plausible evacuation path across the
 space at 1.8 m height (two or three points). Write in {lang}, 120-220 words, no headings."""
