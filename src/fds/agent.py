@@ -312,6 +312,11 @@ def review(state: dict) -> dict:
         out = ReviewOut.model_validate(out)
     log_review(out.analysis, f"fds_review_loop_{loop}")
     print(f"<fds_reviewer loop={loop}>{out.analysis[:300]}</fds_reviewer>")
+    try:
+        with open(Path(state["case_dir"]) / "reviews.jsonl", "a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"loop": loop, "errors": errs, "analysis": out.analysis, "patch": out.patch}, ensure_ascii=False) + "\n")
+    except OSError:
+        pass
     history += f"\n--- loop {loop} ---\nerrors: {errs[:3]}\nanalysis: {out.analysis[:500]}\npatch: {json.dumps(out.patch)[:500]}\n"
     return {
         "loop_count": loop,

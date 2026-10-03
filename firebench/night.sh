@@ -13,7 +13,7 @@ run_one() {
   id="$1"
   if [ -f "firebench/runs/$TAG/$MODE/$id/result.json" ]; then echo "$id: done, skip" >> "$LOG"; return; fi
   echo "$(date +%T) $id: start" >> "$LOG"
-  python firebench/run.py --mode "$MODE" --only "$id" --omp 2 --max_loop 4 --timeout 36000 --run_tag "$TAG" \
+  python -u firebench/run.py --mode "$MODE" --only "$id" --omp 2 --max_loop 4 --timeout 36000 --run_tag "$TAG" \
      > "firebench/runs/$TAG/${MODE}_$id.log" 2>&1
   echo "$(date +%T) $id: exit $? $(grep -o 'passed=[A-Za-z]*' "firebench/runs/$TAG/${MODE}_$id.log" | tail -1)" >> "$LOG"
 }
