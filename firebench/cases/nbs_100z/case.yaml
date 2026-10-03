@@ -7,7 +7,7 @@ title: NBS Multiroom Test 100Z
 t_end_s: 1200.0
 requirement_status: llm_draft
 requirement: 'Je veux modéliser l''essai multipièces NBS 100Z dans un domaine x 0..12,2,
-  y 0..5,8, z 0..2,4 m, avec des mailles uniformes de 0,1 m et une durée de 950 s.
+  y 0..5,8, z 0..2,4 m, avec des mailles uniformes de 0,2 m et une durée de 950 s.
   Les zones hors volume sont des blocs pleins : x 0..2,4, y 0..3,4, z 0..2,4 ; x 4,6..9,8,
   y 0..3,4, z 0..2,4 ; et le plafond surbaissé de la pièce du feu, x 9,8..12,2, y
   0..3,4, z 2,2..2,4. La pièce du feu (x 9,8..12,2, y 0..3,4) contient un bloc plein
@@ -179,3 +179,4 @@ references:
 gate3_min_fraction: 0.67
 expected_criteria_hash: null
 t_end_hint_s: 950
+mesh_hint_m: 0.2

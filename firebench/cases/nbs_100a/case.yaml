@@ -7,7 +7,7 @@ title: NBS Multiroom Test 100A
 t_end_s: 1200.0
 requirement_status: llm_draft
 requirement: 'Modéliser l''essai multi-pièces NBS 100A dans un domaine x 0..12,2,
-  y 0..5,8, z 0..2,4 m, maillage uniforme de 0,1 m, durée 950 s. La zone non utilisée
+  y 0..5,8, z 0..2,4 m, maillage uniforme de 0,2 m, durée 950 s. La zone non utilisée
   x 0..9,8, y 0..3,4, z 0..2,4 est remplie par un bloc plein ; au-dessus de la chambre
   de feu, une dalle x 9,8..12,2, y 0..3,4, z 2,2..2,4 ramène son plafond à 2,2 m.
   Dans la chambre, un bloc plein x 9,8..11,1, y 2,3..3,4, z 0..2,2 et un plafond de
@@ -177,3 +177,4 @@ references:
 gate3_min_fraction: 0.67
 expected_criteria_hash: null
 t_end_hint_s: 950
+mesh_hint_m: 0.2
