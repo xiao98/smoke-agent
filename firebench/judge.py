@@ -131,7 +131,12 @@ def gate3_experiment(bundle: Path, chid: str, case: dict, exp_repo: Path, offici
             items.append({"fds_col": ref["fds_col"], "ok": False, "why": f"column missing: {exc}"[:120]})
             continue
         me = metric(te, ve, ref["metric"], ref["exp_comp"], ref["exp_initial"])
-        mf = metric(tf, vf, ref["metric"], ref["fds_comp"], ref["fds_initial"])
+        fds_comp = list(ref["fds_comp"])
+        last_s = case.get("fds_window_last_s")
+        if last_s and tf and tf[-1] < fds_comp[0]:
+            # the agent run is shorter than the official comparison window (steady-state test): use its last N seconds
+            fds_comp = [tf[-1] - float(last_s), tf[-1]]
+        mf = metric(tf, vf, ref["metric"], fds_comp, ref["fds_initial"])
         if me != me or mf != mf or me == 0:
             items.append({"fds_col": ref["fds_col"], "ok": False, "why": "nan or zero reference"})
             continue

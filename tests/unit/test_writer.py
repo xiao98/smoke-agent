@@ -40,7 +40,10 @@ def test_writer_records():
     mesh = records_of(recs, "MESH")[0]
     assert mesh.params["IJK"] == ["60", "20", "13"]
     fire = [r for r in records_of(recs, "SURF") if r.get("ID") == "FIRE"][0]
-    assert float(fire.get("HRRPUA")) == pytest.approx(1000.0)
+    burner = [r for r in records_of(recs, "OBST") if r.get("ID") == "burner"][0]
+    bx = burner.floats("XB")
+    # the slab is snapped to the grid; HRRPUA is rescaled so the total HRR is still the requested 500 kW
+    assert float(fire.get("HRRPUA")) * (bx[1] - bx[0]) * (bx[3] - bx[2]) == pytest.approx(500.0, rel=1e-3)
     devc = records_of(recs, "DEVC")
     # P1: 4 m path at 2 m spacing -> 3 points x 4 quantities
     assert len(devc) == 12
@@ -91,3 +94,18 @@ def test_surf_id_coerced():
     b = dict(THREE_ROOMS["building"]); b = {**b, "obstructions": [{"id": "beam", "xb": [0, 9, 2.7, 2.8, 2.2, 2.4], "surf_id": "STEEL BEAM"}]}
     spec = ScenarioSpec(**dict(THREE_ROOMS, building=b))
     assert spec.building.obstructions[0].surf_id == "INERT"
+
+
+def test_burner_snap():
+    from fds.writer import snap_burner
+    # NBS-like: 0.3 x 0.3 m burner on a 0.5 m pedestal, 0.2 m grid -> must become a full-cell slab with a FIRE face
+    fire = {"location_xb": [10.9, 11.2, 0.0, 0.3, 0.5, 0.5], "hrr_peak_kw": 110, "growth": "constant"}
+    b = dict(THREE_ROOMS["building"]); b = {**b, "domain": {"x": [0, 12.2], "y": [0, 5.8], "z": [0, 2.4]}, "obstructions": []}
+    spec = ScenarioSpec(**dict(THREE_ROOMS, fire=fire, building=b, mesh={"cell_size": 0.2}))
+    bx = snap_burner(spec, 0.2)
+    assert bx == pytest.approx([10.8, 11.2, 0.0, 0.4, 0.4, 0.6])
+    recs = parse(write(spec))
+    burner = [r for r in records_of(recs, "OBST") if r.get("ID") == "burner"][0]
+    assert burner.floats("XB") == pytest.approx(bx)
+    fire_surf = [r for r in records_of(recs, "SURF") if r.get("ID") == "FIRE"][0]
+    assert float(fire_surf.get("HRRPUA")) == pytest.approx(110 / (0.4 * 0.4))

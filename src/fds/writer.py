@@ -21,6 +21,28 @@ def auto_cell_size(hrr_kw: float, lo: float = 0.05, hi: float = 0.5) -> float:
     return max(lo, min(hi, d))
 
 
+def snap_burner(spec: ScenarioSpec, cell: float) -> list[float]:
+    """Burner slab aligned to the mesh: x/y edges on grid planes (>= 1 cell), base on the nearest grid plane, 1 cell thick."""
+    d = spec.building.domain
+    fx = spec.fire.location_xb
+
+    def down(v, o):
+        return o + math.floor((v - o) / cell + 1e-9) * cell
+
+    def up(v, o):
+        return o + math.ceil((v - o) / cell - 1e-9) * cell
+
+    x0, x1 = down(fx[0], d.x[0]), up(fx[1], d.x[0])
+    y0, y1 = down(fx[2], d.y[0]), up(fx[3], d.y[0])
+    if x1 - x0 < cell:
+        x1 = x0 + cell
+    if y1 - y0 < cell:
+        y1 = y0 + cell
+    z0 = d.z[0] + round((fx[4] - d.z[0]) / cell) * cell
+    z0 = min(max(z0, d.z[0]), d.z[1] - cell)
+    return [x0, x1, y0, y1, z0, z0 + cell]
+
+
 def _f(v: float) -> str:
     return f"{v:.4g}" if abs(v) >= 1e-3 or v == 0 else f"{v:.4e}"
 
@@ -89,16 +111,18 @@ def write(spec: ScenarioSpec) -> str:
                                 "SOOT_YIELD": [_f(fu.soot_yield)], "CO_YIELD": [_f(fu.co_yield)],
                                 "HEAT_OF_COMBUSTION": [_f(fu.heat_of_combustion)]}))
 
-    # Fire: a 0.1 m slab whose top face burns at HRRPUA = peak / area
-    hrrpua = spec.fire.hrr_peak_kw / spec.fire.area_m2
+    # Fire: a one-cell-thick slab snapped to the grid, whose top face burns at HRRPUA = peak / snapped area.
+    # (A slab thinner than a cell, or a face between grid planes, is collapsed by FDS and releases no heat.)
+    bx = snap_burner(spec, cell)
+    area = (bx[1] - bx[0]) * (bx[3] - bx[2])
+    hrrpua = spec.fire.hrr_peak_kw / area
     surf = {"ID": ["FIRE"], "HRRPUA": [_f(hrrpua)], "COLOR": ["RED"]}
     if spec.fire.hrr_curve or spec.fire.growth != "constant":
         surf["RAMP_Q"] = ["fire_ramp"]
     recs.append(Record("SURF", surf))
     recs += ramp_records(spec)
-    x0, x1, y0, y1, z, _ = spec.fire.location_xb
-    recs.append(Record("OBST", {"ID": ["burner"], "XB": _xb([x0, x1, y0, y1, z, z + 0.1]),
-                                "SURF_IDS": ["FIRE", "INERT", "INERT"]}))
+    recs.append(Record("OBST", {"ID": ["burner"], "XB": _xb(bx), "SURF_IDS": ["FIRE", "INERT", "INERT"]}))
+    x0, x1, y0, y1 = bx[0], bx[1], bx[2], bx[3]
 
     for o in spec.building.obstructions:
         recs.append(Record("OBST", {"ID": [o.id], "XB": _xb(o.xb), "SURF_ID": [o.surf_id]}))

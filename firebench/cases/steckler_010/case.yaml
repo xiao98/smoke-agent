@@ -9,20 +9,20 @@ requirement_status: llm_draft
 requirement: 'Simuler l''essai 10 de Steckler : un petit local avec un feu de méthane
   constant au centre et une seule porte étroite ouverte vers l''extérieur. Le domaine
   de calcul va de x 0,00..3,60, y -1,40..1,40 et z 0,00..2,13 m. Le maillage est uniforme,
-  avec des cellules de 0,05 m (72 × 56 × 44). La température ambiante est de 22 °C.
-  La façade avant est une paroi pleine en x 2,80..2,90, y -1,40..1,40, z 0,00..2,13.
-  La porte est une ouverture en x 2,75..2,95, y -0,10..0,15, z 0,00..1,83, qui traverse
-  la paroi. Le local occupe la partie x 0,00..2,80. La bande x 2,90..3,60 représente
-  l''extérieur. Le brûleur est posé au sol, centré en (1,40 ; 0,00). Son empreinte
-  rectangulaire équivalente est de x 1,28..1,52, y -0,125..0,125, z 0,00, soit environ
-  0,06 m². Sa puissance est de 62,9 kW, constante dès le départ, sans croissance t².
-  Côté extérieur, le domaine est ouvert en permanence sur quatre faces : toute la
-  face x = 3,60, la face y = -1,40 pour x 2,90..3,60 et z 0,00..2,13, la face y =
-  1,40 sur la même plage, et le plafond z = 2,13 pour x 2,90..3,60 et y -1,40..1,40.
-  Il n''y a aucune extraction mécanique. La durée simulée est de 400 s. Comme chemin
-  d''évacuation plausible à 1,8 m de hauteur, on peut partir du fond du local en (0,50
-  ; 1,00 ; 1,80), passer par (2,50 ; 0,00 ; 1,80) puis franchir la porte jusqu''à
-  (3,30 ; 0,00 ; 1,80) à l''extérieur.'
+  avec des cellules de 0,10 m. La température ambiante est de 22 °C. La façade avant
+  est une paroi pleine en x 2,80..2,90, y -1,40..1,40, z 0,00..2,13. La porte est
+  une ouverture en x 2,75..2,95, y -0,10..0,15, z 0,00..1,83, qui traverse la paroi.
+  Le local occupe la partie x 0,00..2,80. La bande x 2,90..3,60 représente l''extérieur.
+  Le brûleur est posé au sol, centré en (1,40 ; 0,00). Son empreinte rectangulaire
+  équivalente est de x 1,28..1,52, y -0,125..0,125, z 0,00, soit environ 0,06 m².
+  Sa puissance est de 62,9 kW, constante dès le départ, sans croissance t². Côté extérieur,
+  le domaine est ouvert en permanence sur quatre faces : toute la face x = 3,60, la
+  face y = -1,40 pour x 2,90..3,60 et z 0,00..2,13, la face y = 1,40 sur la même plage,
+  et le plafond z = 2,13 pour x 2,90..3,60 et y -1,40..1,40. Il n''y a aucune extraction
+  mécanique. La durée simulée est de 400 s. Comme chemin d''évacuation plausible à
+  1,8 m de hauteur, on peut partir du fond du local en (0,50 ; 1,00 ; 1,80), passer
+  par (2,50 ; 0,00 ; 1,80) puis franchir la porte jusqu''à (3,30 ; 0,00 ; 1,80) à
+  l''extérieur.'
 rset_s: 120
 references:
 - exp_file: Steckler_Compartment/Steckler_Test_10_layer.csv
@@ -47,3 +47,4 @@ references:
 gate3_min_fraction: 0.67
 expected_criteria_hash: null
 t_end_hint_s: 400
+fds_window_last_s: 60

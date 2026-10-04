@@ -16,7 +16,7 @@ from pathlib import Path
 
 from fds.namelist import Record, dump, parse
 from fds.spec import ScenarioSpec
-from fds.writer import auto_cell_size, char_diameter
+from fds.writer import auto_cell_size, char_diameter, snap_burner
 
 
 @dataclass
@@ -75,6 +75,10 @@ def engineering(spec: ScenarioSpec) -> Report:
     hrrpua = spec.fire.hrr_peak_kw / spec.fire.area_m2
     if not 250 <= hrrpua <= 2500:
         r.warnings.append(f"HRRPUA = {hrrpua:.0f} kW/m2 is outside the usual 250-2500 range")
+    bx = snap_burner(spec, cell)
+    snapped = (bx[1] - bx[0]) * (bx[3] - bx[2])
+    if abs(snapped - spec.fire.area_m2) > 0.5 * spec.fire.area_m2:
+        r.warnings.append(f"burner footprint snapped from {spec.fire.area_m2:.2f} to {snapped:.2f} m2 on a {cell:.2f} m grid; HRRPUA adjusted to keep total HRR")
     d = spec.building.domain
     cells = 1
     for e, lo in ((d.x[1] - d.x[0], 0), (d.y[1] - d.y[0], 0), (d.z[1] - d.z[0], 0)):
