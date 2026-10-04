@@ -6,20 +6,8 @@ source_fds: Validation/NBS_Multi-Room/FDS_Input_Files/NBS_100A.fds
 title: NBS Multiroom Test 100A
 t_end_s: 1200.0
 requirement_status: llm_draft
-requirement: 'Modéliser l''essai multi-pièces NBS 100A dans un domaine x 0..12,2,
-  y 0..5,8, z 0..2,4 m, maillage uniforme de 0,2 m, durée 950 s. La zone non utilisée
-  x 0..9,8, y 0..3,4, z 0..2,4 est remplie par un bloc plein ; au-dessus de la chambre
-  de feu, une dalle x 9,8..12,2, y 0..3,4, z 2,2..2,4 ramène son plafond à 2,2 m.
-  Dans la chambre, un bloc plein x 9,8..11,1, y 2,3..3,4, z 0..2,2 et un plafond de
-  couloir d''accès x 11,1..12,2, y 2,3..3,4, z 2,0..2,2. La cloison entre chambre
-  et couloir est un mur x 9,8..12,2, y 3,3..3,4, z 0..2,2, percé d''une porte x 11,2..12,0,
-  z 0..1,6. Le couloir occupe x 0..12,2, y 3,4..5,8, z 0..2,4. Brûleur au méthane
-  posé sur un socle x 10,9..11,2, y 0..0,3, z 0..0,5 (surface du brûleur à z = 0,5),
-  avec un débit calorifique constant de 110 kW atteint en 1 s (dans l''essai, il s''éteint
-  à 900 s). Seule ouverture permanente : porte au bout du couloir sur la face x =
-  0, y 4,2..5,0, z 0..2,0 ; pas d''extraction mécanique. Chemin d''évacuation à 1,8
-  m de hauteur le long du couloir : (11,6 ; 4,6 ; 1,8) → (6,0 ; 4,6 ; 1,8) → (0,2
-  ; 4,6 ; 1,8).'
+requirement: 'Modéliser l''essai multi-pièces NBS 100A dans un domaine x 0..12,2, y 0..5,8, z 0..2,4 m, maillage de 0,1 m en deux blocs : chambre de feu x 9,8..12,2, y 0..3,4, z 0..2,2 et couloir x 0..12,2, y 3,4..5,8, z 0..2,4 (l''espace hors blocs n''est pas calculé), durée 950 s. La zone non utilisée x 0..9,8, y 0..3,4, z 0..2,4 est remplie par un bloc plein ; au-dessus de la chambre de feu, une dalle x 9,8..12,2, y 0..3,4, z 2,2..2,4 ramène son plafond à 2,2 m. Dans la chambre, un bloc plein x 9,8..11,1, y 2,3..3,4, z 0..2,2 et un plafond de couloir d''accès x 11,1..12,2, y 2,3..3,4, z 2,0..2,2. La cloison entre chambre et couloir est un mur x 9,8..12,2, y 3,3..3,4, z 0..2,2, percé d''une porte x 11,2..12,0, z 0..1,6. Le couloir occupe x 0..12,2, y 3,4..5,8, z 0..2,4. Brûleur au méthane posé sur un socle x 10,9..11,2, y 0..0,3, z 0..0,5 (surface du brûleur à z = 0,5), avec un débit calorifique constant de 110 kW atteint en 1 s (dans l''essai, il s''éteint à 900 s). Seule ouverture permanente
+  : porte au bout du couloir sur la face x = 0, y 4,2..5,0, z 0..2,0 ; pas d''extraction mécanique. Chemin d''évacuation à 1,8 m de hauteur le long du couloir : (11,6 ; 4,6 ; 1,8) → (6,0 ; 4,6 ; 1,8) → (0,2 ; 4,6 ; 1,8).'
 rset_s: 120
 references:
 - exp_file: NBS_Multi-Room/NBS_MV100A_Tree1_layer.csv

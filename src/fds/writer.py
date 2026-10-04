@@ -54,6 +54,12 @@ def _xb(xb: list[float]) -> list[str]:
 def mesh_records(spec: ScenarioSpec) -> tuple[list[Record], float]:
     d = spec.building.domain
     cell = spec.mesh.cell_size if spec.mesh.cell_size != "auto" else auto_cell_size(spec.fire.hrr_peak_kw)
+    if spec.mesh.blocks:
+        recs = []
+        for i, b in enumerate(spec.mesh.blocks):
+            ijk = [max(1, int(round((b[2 * a + 1] - b[2 * a]) / cell))) for a in range(3)]
+            recs.append(Record("MESH", {"ID": [f"m{i + 1}"], "IJK": [str(v) for v in ijk], "XB": _xb(b)}))
+        return recs, cell
     ext = [d.x[1] - d.x[0], d.y[1] - d.y[0], d.z[1] - d.z[0]]
     ijk = [max(1, int(math.ceil(e / cell))) for e in ext]
     total = ijk[0] * ijk[1] * ijk[2]
@@ -121,7 +127,6 @@ def write(spec: ScenarioSpec) -> str:
         surf["RAMP_Q"] = ["fire_ramp"]
     recs.append(Record("SURF", surf))
     recs += ramp_records(spec)
-    recs.append(Record("OBST", {"ID": ["burner"], "XB": _xb(bx), "SURF_IDS": ["FIRE", "INERT", "INERT"]}))
     x0, x1, y0, y1 = bx[0], bx[1], bx[2], bx[3]
 
     for o in spec.building.obstructions:
@@ -130,6 +135,8 @@ def write(spec: ScenarioSpec) -> str:
             recs.append(Record("HOLE", {"XB": _xb(h.xb)}))
     for c in spec.smoke_control.curtains:
         recs.append(Record("OBST", {"ID": [c.id], "XB": _xb(c.xb), "SURF_ID": ["INERT"]}))
+    # burner last: where a pedestal snapped to the grid overlaps the slab, the last OBST's surfaces take precedence
+    recs.append(Record("OBST", {"ID": ["burner"], "XB": _xb(bx), "SURF_IDS": ["FIRE", "INERT", "INERT"]}))
     for op in spec.building.openings:
         recs.append(Record("VENT", {"ID": [op.id], "XB": _xb(op.xb), "SURF_ID": ["OPEN"]}))
 

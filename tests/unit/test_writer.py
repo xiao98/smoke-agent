@@ -109,3 +109,19 @@ def test_burner_snap():
     assert burner.floats("XB") == pytest.approx(bx)
     fire_surf = [r for r in records_of(recs, "SURF") if r.get("ID") == "FIRE"][0]
     assert float(fire_surf.get("HRRPUA")) == pytest.approx(110 / (0.4 * 0.4))
+
+
+def test_mesh_blocks_and_burner_last():
+    b = {**THREE_ROOMS["building"], "domain": {"x": [0, 12.2], "y": [0, 5.8], "z": [0, 2.4]},
+         "obstructions": [{"id": "pedestal", "xb": [10.9, 11.2, 0, 0.3, 0, 0.5]}], "openings": []}
+    fire = {"location_xb": [10.9, 11.2, 0.0, 0.3, 0.5, 0.5], "hrr_peak_kw": 110, "growth": "constant"}
+    mesh = {"cell_size": 0.1, "blocks": [[9.8, 12.2, 0, 3.4, 0, 2.2], [0, 12.2, 3.4, 5.8, 0, 2.4]]}
+    spec = ScenarioSpec(**dict(THREE_ROOMS, fire=fire, building=b, mesh=mesh))
+    assert V.structural(spec).errors == []
+    recs = parse(write(spec))
+    meshes = records_of(recs, "MESH")
+    assert [m.params["IJK"] for m in meshes] == [["24", "34", "22"], ["122", "24", "24"]]
+    obst_ids = [r.get("ID") for r in records_of(recs, "OBST")]
+    assert obst_ids[-1] == "burner" and "pedestal" in obst_ids
+    bad = ScenarioSpec(**dict(THREE_ROOMS, fire=fire, building=b, mesh={"cell_size": 0.1, "blocks": [[0, 9, 0, 3.4, 0, 2.2]]}))
+    assert any("not inside any mesh block" in e for e in V.structural(bad).errors)

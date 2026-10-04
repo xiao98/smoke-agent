@@ -6,6 +6,8 @@
 """
 from __future__ import annotations
 
+import math
+
 import os
 import re
 import shutil
@@ -62,6 +64,12 @@ def structural(spec: ScenarioSpec) -> Report:
             r.errors.append(f"fire footprint intersects obstruction {o.id}")
     if spec.fire.fuel.soot_yield <= 0:
         r.errors.append("soot_yield must be > 0 or VISIBILITY is meaningless")
+    for i, b in enumerate(spec.mesh.blocks):
+        if any(b[2 * a] < d[2 * a] - 1e-6 or b[2 * a + 1] > d[2 * a + 1] + 1e-6 or b[2 * a + 1] <= b[2 * a] for a in range(3)):
+            r.errors.append(f"mesh block {i + 1} must lie inside the domain with max > min")
+    if spec.mesh.blocks and not any(b[0] <= fx[0] and fx[1] <= b[1] and b[2] <= fx[2] and fx[3] <= b[3] and b[4] <= fx[4] <= b[5]
+                                    for b in spec.mesh.blocks):
+        r.errors.append("fire footprint is not inside any mesh block")
     return r
 
 
@@ -83,6 +91,8 @@ def engineering(spec: ScenarioSpec) -> Report:
     cells = 1
     for e, lo in ((d.x[1] - d.x[0], 0), (d.y[1] - d.y[0], 0), (d.z[1] - d.z[0], 0)):
         cells *= max(1, int(round(e / cell)))
+    if spec.mesh.blocks:
+        cells = sum(math.prod(max(1, int(round((b[2 * a + 1] - b[2 * a]) / cell))) for a in range(3)) for b in spec.mesh.blocks)
     if cells > 4_000_000:
         r.warnings.append(f"about {cells/1e6:.1f} M cells; expect very long run times")
     q_exh = sum(e.volume_flow_m3s for e in spec.smoke_control.exhaust)

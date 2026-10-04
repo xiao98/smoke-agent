@@ -194,6 +194,9 @@ class EscapePath(BaseModel):
 class Mesh(BaseModel):
     cell_size: float | Literal["auto"] = "auto"
     max_cells_per_mesh: int = 1_000_000
+    blocks: list[XB] = Field(default_factory=list, description=(
+        "Optional explicit mesh blocks, one XB [x0,x1,y0,y1,z0,z1] per block inside the domain (e.g. one per room, "
+        "as in the NIST validation inputs). Space outside the blocks is not computed. Empty = mesh the whole domain box."))
 
 
 class Sim(BaseModel):
