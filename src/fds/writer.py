@@ -43,6 +43,36 @@ def snap_burner(spec: ScenarioSpec, cell: float) -> list[float]:
     return [x0, x1, y0, y1, z0, z0 + cell]
 
 
+def subtract_holes(box: list[float], holes: list[list[float]]) -> list[list[float]]:
+    """Boxes left after cutting the holes out of the box (written as separate &OBST, never as &HOLE).
+    A &HOLE in an OBST whose face lies on a mesh interface leaves a zero-thickness plate on the neighbouring
+    mesh and seals the opening (seen on NBS 100A: fire room sealed, fire starved at 200 s)."""
+    pieces = [list(box)]
+    for h in holes:
+        out = []
+        for b in pieces:
+            ix = [max(b[0], h[0]), min(b[1], h[1])]
+            iy = [max(b[2], h[2]), min(b[3], h[3])]
+            iz = [max(b[4], h[4]), min(b[5], h[5])]
+            if ix[0] >= ix[1] or iy[0] >= iy[1] or iz[0] >= iz[1]:
+                out.append(b)
+                continue
+            if b[0] < ix[0]:
+                out.append([b[0], ix[0], b[2], b[3], b[4], b[5]])
+            if ix[1] < b[1]:
+                out.append([ix[1], b[1], b[2], b[3], b[4], b[5]])
+            if b[2] < iy[0]:
+                out.append([ix[0], ix[1], b[2], iy[0], b[4], b[5]])
+            if iy[1] < b[3]:
+                out.append([ix[0], ix[1], iy[1], b[3], b[4], b[5]])
+            if b[4] < iz[0]:
+                out.append([ix[0], ix[1], iy[0], iy[1], b[4], iz[0]])
+            if iz[1] < b[5]:
+                out.append([ix[0], ix[1], iy[0], iy[1], iz[1], b[5]])
+        pieces = out
+    return pieces
+
+
 def _f(v: float) -> str:
     return f"{v:.4g}" if abs(v) >= 1e-3 or v == 0 else f"{v:.4e}"
 
@@ -130,9 +160,10 @@ def write(spec: ScenarioSpec) -> str:
     x0, x1, y0, y1 = bx[0], bx[1], bx[2], bx[3]
 
     for o in spec.building.obstructions:
-        recs.append(Record("OBST", {"ID": [o.id], "XB": _xb(o.xb), "SURF_ID": [o.surf_id]}))
-        for h in o.holes:
-            recs.append(Record("HOLE", {"XB": _xb(h.xb)}))
+        pieces = subtract_holes(o.xb, [h.xb for h in o.holes])
+        for k, piece in enumerate(pieces):
+            pid = o.id if len(pieces) == 1 else f"{o.id}_{k + 1}"
+            recs.append(Record("OBST", {"ID": [pid], "XB": _xb(piece), "SURF_ID": [o.surf_id]}))
     for c in spec.smoke_control.curtains:
         recs.append(Record("OBST", {"ID": [c.id], "XB": _xb(c.xb), "SURF_ID": ["INERT"]}))
     # burner last: where a pedestal snapped to the grid overlaps the slab, the last OBST's surfaces take precedence

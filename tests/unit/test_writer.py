@@ -36,7 +36,8 @@ def test_writer_records():
     text = write(spec)
     recs = parse(text)
     groups = {r.group for r in recs}
-    assert {"HEAD", "MESH", "TIME", "REAC", "SURF", "RAMP", "OBST", "HOLE", "VENT", "DEVC", "SLCF", "TAIL"} <= groups
+    assert {"HEAD", "MESH", "TIME", "REAC", "SURF", "RAMP", "OBST", "VENT", "DEVC", "SLCF", "TAIL"} <= groups
+    assert "HOLE" not in groups
     mesh = records_of(recs, "MESH")[0]
     assert mesh.params["IJK"] == ["60", "20", "13"]
     fire = [r for r in records_of(recs, "SURF") if r.get("ID") == "FIRE"][0]
@@ -125,3 +126,14 @@ def test_mesh_blocks_and_burner_last():
     assert obst_ids[-1] == "burner" and "pedestal" in obst_ids
     bad = ScenarioSpec(**dict(THREE_ROOMS, fire=fire, building=b, mesh={"cell_size": 0.1, "blocks": [[0, 9, 0, 3.4, 0, 2.2]]}))
     assert any("not inside any mesh block" in e for e in V.structural(bad).errors)
+
+
+def test_subtract_holes():
+    from fds.writer import subtract_holes
+    wall = [9.8, 12.2, 3.3, 3.4, 0, 2.2]
+    door = [11.2, 12.0, 3.3, 3.4, 0, 1.6]
+    pieces = subtract_holes(wall, [door])
+    assert sorted(pieces) == sorted([[9.8, 11.2, 3.3, 3.4, 0, 2.2], [12.0, 12.2, 3.3, 3.4, 0, 2.2], [11.2, 12.0, 3.3, 3.4, 1.6, 2.2]])
+    vol = lambda b: (b[1] - b[0]) * (b[3] - b[2]) * (b[5] - b[4])
+    assert sum(map(vol, pieces)) == pytest.approx(vol(wall) - vol(door))
+    assert subtract_holes(wall, [[0, 1, 0, 1, 0, 1]]) == [wall]
