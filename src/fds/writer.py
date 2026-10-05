@@ -43,6 +43,114 @@ def snap_burner(spec: ScenarioSpec, cell: float) -> list[float]:
     return [x0, x1, y0, y1, z0, z0 + cell]
 
 
+# Thermal properties from the NIST FDS validation inputs (NBS_Multi-Room, citing NBSIR 88-3752; steel: Drysdale).
+# Each entry: (SURF id, MATL/RAMP records, SURF params without ID).
+MATERIALS: dict[str, tuple[str, list[Record], dict[str, list[str]]]] = {
+    "inert": ("INERT", [], {}),
+    "gypsum": ("GYPSUM BOARD",
+               [Record("MATL", {"ID": ["GYPSUM"], "CONDUCTIVITY": ["0.17"], "SPECIFIC_HEAT": ["1.09"], "DENSITY": ["930."]})],
+               {"MATL_ID": ["GYPSUM"], "COLOR": ["BEIGE"], "THICKNESS": ["0.013"]}),
+    "concrete": ("CONCRETE",
+                 [Record("MATL", {"ID": ["CONCRETE"], "CONDUCTIVITY": ["1.8"], "SPECIFIC_HEAT": ["1.04"], "DENSITY": ["2280."]})],
+                 {"MATL_ID": ["CONCRETE"], "COLOR": ["GRAY 60"], "THICKNESS": ["0.102"]}),
+    "ceramic_fiber": ("INSULATION",
+                      [Record("MATL", {"ID": ["CERAMIC FIBER"], "CONDUCTIVITY_RAMP": ["k_fiber"], "SPECIFIC_HEAT": ["1.04"],
+                                       "DENSITY": ["128."], "EMISSIVITY": ["0.97"]}),
+                       Record("RAMP", {"ID": ["k_fiber"], "T": ["20."], "F": ["0.09"]}),
+                       Record("RAMP", {"ID": ["k_fiber"], "T": ["300."], "F": ["0.09"]}),
+                       Record("RAMP", {"ID": ["k_fiber"], "T": ["600."], "F": ["0.17"]}),
+                       Record("RAMP", {"ID": ["k_fiber"], "T": ["900."], "F": ["0.25"]})],
+                      {"MATL_ID": ["CERAMIC FIBER"], "COLOR": ["GRAY"], "THICKNESS": ["0.050"]}),
+    "calcium_silicate_on_gypsum": ("HALLWAY BOARD",
+                                   [Record("MATL", {"ID": ["CALCIUM SILICATE"], "CONDUCTIVITY": ["0.12"], "SPECIFIC_HEAT_RAMP": ["c_cal"],
+                                                    "DENSITY": ["720."], "EMISSIVITY": ["0.83"]}),
+                                    Record("RAMP", {"ID": ["c_cal"], "T": ["20."], "F": ["1.25"]}),
+                                    Record("RAMP", {"ID": ["c_cal"], "T": ["200."], "F": ["1.25"]}),
+                                    Record("RAMP", {"ID": ["c_cal"], "T": ["300."], "F": ["1.33"]}),
+                                    Record("RAMP", {"ID": ["c_cal"], "T": ["600."], "F": ["1.55"]}),
+                                    Record("MATL", {"ID": ["GYPSUM"], "CONDUCTIVITY": ["0.17"], "SPECIFIC_HEAT": ["1.09"], "DENSITY": ["930."]})],
+                                   {"MATL_ID(1:2,1)": ["CALCIUM SILICATE", "GYPSUM"], "COLOR": ["WHEAT"], "THICKNESS(1:2)": ["0.013", "0.013"]}),
+    "fire_brick": ("FIRE BRICK",
+                   [Record("MATL", {"ID": ["FIRE BRICK"], "CONDUCTIVITY_RAMP": ["k_brick"], "SPECIFIC_HEAT": ["1.04"],
+                                    "DENSITY": ["750."], "EMISSIVITY": ["0.80"]}),
+                    Record("RAMP", {"ID": ["k_brick"], "T": ["20."], "F": ["0.36"]}),
+                    Record("RAMP", {"ID": ["k_brick"], "T": ["200."], "F": ["0.36"]}),
+                    Record("RAMP", {"ID": ["k_brick"], "T": ["300."], "F": ["0.38"]}),
+                    Record("RAMP", {"ID": ["k_brick"], "T": ["600."], "F": ["0.45"]})],
+                   {"MATL_ID": ["FIRE BRICK"], "COLOR": ["FIREBRICK"], "THICKNESS": ["0.113"]}),
+    "steel": ("STEEL",
+              [Record("MATL", {"ID": ["STEEL"], "EMISSIVITY": ["0.95"], "SPECIFIC_HEAT": ["0.46"], "CONDUCTIVITY": ["45.8"], "DENSITY": ["7850."]})],
+              {"MATL_ID": ["STEEL"], "COLOR": ["BLACK"], "THICKNESS": ["0.005"]}),
+}
+
+
+def surf_for(material: str) -> str:
+    return MATERIALS[material][0]
+
+
+def material_records(spec: ScenarioSpec) -> list[Record]:
+    """MATL/RAMP/SURF records for every material used; the building default SURF carries DEFAULT=.TRUE."""
+    default = spec.building.wall_material
+    used = [default] + [o.material for o in spec.building.obstructions if o.material] + [m for m in spec.mesh.block_materials if m]
+    recs: list[Record] = []
+    seen_matl: set[str] = set()
+    for m in dict.fromkeys(used):
+        sid, matl, surf = MATERIALS[m]
+        if not surf:
+            continue  # inert
+        for r in matl:
+            key = r.group + ":" + (r.get("ID") or "") + ":" + (r.get("T") or "")  # MATL once per ID; RAMP once per point
+            if key in seen_matl:
+                continue
+            seen_matl.add(key)
+            recs.append(r)
+        params = {"ID": [sid]}
+        if m == default:
+            params["DEFAULT"] = [".TRUE."]
+        params.update(surf)
+        recs.append(Record("SURF", params))
+    return recs
+
+
+def _faces(b: list[float]) -> list[list[float]]:
+    return [[b[0], b[0], b[2], b[3], b[4], b[5]], [b[1], b[1], b[2], b[3], b[4], b[5]],
+            [b[0], b[1], b[2], b[2], b[4], b[5]], [b[0], b[1], b[3], b[3], b[4], b[5]],
+            [b[0], b[1], b[2], b[3], b[4], b[4]], [b[0], b[1], b[2], b[3], b[5], b[5]]]
+
+
+def _face_touches(face: list[float], box: list[float]) -> bool:
+    """True when the planar face lies on one of the box's planes and shares a positive area with it."""
+    k0 = next(k for k in range(3) if face[2 * k] == face[2 * k + 1])
+    v = face[2 * k0]
+    if abs(box[2 * k0] - v) > 1e-9 and abs(box[2 * k0 + 1] - v) > 1e-9:
+        return False
+    for k in range(3):
+        if k == k0:
+            continue
+        if min(face[2 * k + 1], box[2 * k + 1]) - max(face[2 * k], box[2 * k]) <= 1e-9:
+            return False
+    return True
+
+
+def block_boundary_vents(spec: ScenarioSpec) -> list[Record]:
+    """Boundary VENTs giving a mesh block's walls/floor/ceiling their own material (like the NIST room inputs).
+    Faces shared with another block (mesh interfaces) or touched by an opening/exhaust are left alone."""
+    recs: list[Record] = []
+    blocks = spec.mesh.blocks
+    planar = [op.xb for op in spec.building.openings] + [e.xb for e in spec.smoke_control.exhaust]
+    for i, b in enumerate(blocks):
+        m = spec.mesh.block_materials[i] if i < len(spec.mesh.block_materials) else None
+        if not m or m == spec.building.wall_material:
+            continue
+        for k, face in enumerate(_faces(b)):
+            if any(_face_touches(face, other) for j, other in enumerate(blocks) if j != i):
+                continue
+            if any(_face_touches(face, p) for p in planar):
+                continue
+            recs.append(Record("VENT", {"ID": [f"m{i + 1}_face{k + 1}"], "XB": _xb(face), "SURF_ID": [surf_for(m)]}))
+    return recs
+
+
 def subtract_holes(box: list[float], holes: list[list[float]]) -> list[list[float]]:
     """Boxes left after cutting the holes out of the box (written as separate &OBST, never as &HOLE).
     A &HOLE in an OBST whose face lies on a mesh interface leaves a zero-thickness plate on the neighbouring
@@ -146,6 +254,7 @@ def write(spec: ScenarioSpec) -> str:
     recs.append(Record("REAC", {"FUEL": [fu.name], "C": [_f(fu.c)], "H": [_f(fu.h)], "O": [_f(fu.o)], "N": [_f(fu.n)],
                                 "SOOT_YIELD": [_f(fu.soot_yield)], "CO_YIELD": [_f(fu.co_yield)],
                                 "HEAT_OF_COMBUSTION": [_f(fu.heat_of_combustion)]}))
+    recs += material_records(spec)
 
     # Fire: a one-cell-thick slab snapped to the grid, whose top face burns at HRRPUA = peak / snapped area.
     # (A slab thinner than a cell, or a face between grid planes, is collapsed by FDS and releases no heat.)
@@ -163,11 +272,12 @@ def write(spec: ScenarioSpec) -> str:
         pieces = subtract_holes(o.xb, [h.xb for h in o.holes])
         for k, piece in enumerate(pieces):
             pid = o.id if len(pieces) == 1 else f"{o.id}_{k + 1}"
-            recs.append(Record("OBST", {"ID": [pid], "XB": _xb(piece), "SURF_ID": [o.surf_id]}))
+            recs.append(Record("OBST", {"ID": [pid], "XB": _xb(piece), "SURF_ID": [surf_for(o.material or spec.building.wall_material)]}))
     for c in spec.smoke_control.curtains:
-        recs.append(Record("OBST", {"ID": [c.id], "XB": _xb(c.xb), "SURF_ID": ["INERT"]}))
+        recs.append(Record("OBST", {"ID": [c.id], "XB": _xb(c.xb), "SURF_ID": [surf_for(spec.building.wall_material)]}))
     # burner last: where a pedestal snapped to the grid overlaps the slab, the last OBST's surfaces take precedence
     recs.append(Record("OBST", {"ID": ["burner"], "XB": _xb(bx), "SURF_IDS": ["FIRE", "INERT", "INERT"]}))
+    recs += block_boundary_vents(spec)
     for op in spec.building.openings:
         recs.append(Record("VENT", {"ID": [op.id], "XB": _xb(op.xb), "SURF_ID": ["OPEN"]}))
 

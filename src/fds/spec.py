@@ -12,6 +12,10 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 XB = list[float]
 
+# Wall/obstruction materials with thermal properties (fds/writer.py MATERIALS); "inert" = isothermal cold wall,
+# which over-predicts heat loss and under-predicts gas temperatures (NBS multi-room tests: -30 to -60 %).
+Material = Literal["inert", "gypsum", "concrete", "ceramic_fiber", "calcium_silicate_on_gypsum", "fire_brick", "steel"]
+
 
 def _check_xb(xb: XB) -> XB:
     if len(xb) != 6:
@@ -30,7 +34,8 @@ class Hole(BaseModel):
 class Obstruction(BaseModel):
     id: str
     xb: XB
-    surf_id: str = "INERT"  # only INERT is defined in generated files; anything else is coerced
+    surf_id: str = "INERT"  # legacy, ignored; use material
+    material: Optional[Material] = Field(None, description="Surface material of this obstruction; null = building.wall_material")
     holes: list[Hole] = Field(default_factory=list)
     _v = field_validator("xb")(_check_xb)
 
@@ -68,6 +73,10 @@ class Domain(BaseModel):
 
 class Building(BaseModel):
     domain: Domain
+    wall_material: Material = Field("gypsum", description=(
+        "Default material of every wall, floor, ceiling and obstruction (FDS default SURF). "
+        "gypsum = 13 mm plasterboard; concrete = 102 mm; ceramic_fiber = 50 mm insulation; "
+        "calcium_silicate_on_gypsum = 13+13 mm boards; fire_brick = 113 mm; steel = 5 mm; inert = cold isothermal wall."))
     obstructions: list[Obstruction] = Field(default_factory=list)
     openings: list[Opening] = Field(default_factory=list)
 
@@ -197,6 +206,9 @@ class Mesh(BaseModel):
     blocks: list[XB] = Field(default_factory=list, description=(
         "Optional explicit mesh blocks, one XB [x0,x1,y0,y1,z0,z1] per block inside the domain (e.g. one per room, "
         "as in the NIST validation inputs). Space outside the blocks is not computed. Empty = mesh the whole domain box."))
+    block_materials: list[Optional[Material]] = Field(default_factory=list, description=(
+        "Optional, parallel to blocks: material of that block's boundary walls/floor/ceiling (e.g. an insulated fire room); "
+        "null = building.wall_material"))
 
 
 class Sim(BaseModel):

@@ -137,3 +137,30 @@ def test_subtract_holes():
     vol = lambda b: (b[1] - b[0]) * (b[3] - b[2]) * (b[5] - b[4])
     assert sum(map(vol, pieces)) == pytest.approx(vol(wall) - vol(door))
     assert subtract_holes(wall, [[0, 1, 0, 1, 0, 1]]) == [wall]
+
+
+def test_materials():
+    from fds.writer import MATERIALS
+    b = {**THREE_ROOMS["building"], "domain": {"x": [0, 12.2], "y": [0, 5.8], "z": [0, 2.4]}, "openings": [
+        {"id": "door", "xb": [0, 0, 4.2, 5.0, 0, 2.0]}], "wall_material": "calcium_silicate_on_gypsum",
+         "obstructions": [{"id": "beam", "xb": [1, 2, 4, 4.2, 2.2, 2.4], "material": "steel"}, {"id": "wall", "xb": [5, 5.1, 3.4, 5.8, 0, 2.4]}]}
+    fire = {"location_xb": [10.9, 11.2, 0.0, 0.3, 0.5, 0.5], "hrr_peak_kw": 110, "growth": "constant"}
+    mesh = {"cell_size": 0.1, "blocks": [[9.8, 12.2, 0, 3.4, 0, 2.2], [0, 12.2, 3.4, 5.8, 0, 2.4]], "block_materials": ["ceramic_fiber", None]}
+    spec = ScenarioSpec(**dict(THREE_ROOMS, fire=fire, building=b, mesh=mesh))
+    assert V.structural(spec).errors == []
+    text = write(spec)
+    recs = parse(text)
+    surfs = {r.get("ID"): r for r in records_of(recs, "SURF")}
+    assert surfs["HALLWAY BOARD"].get("DEFAULT").upper() == ".TRUE."
+    assert "INSULATION" in surfs and "STEEL" in surfs and "DEFAULT" not in surfs["STEEL"].params
+    assert {r.get("ID") for r in records_of(recs, "MATL")} == {"CALCIUM SILICATE", "GYPSUM", "CERAMIC FIBER", "STEEL"}
+    obst = {r.get("ID"): r for r in records_of(recs, "OBST")}
+    assert obst["beam"].get("SURF_ID") == "STEEL" and obst["wall"].get("SURF_ID") == "HALLWAY BOARD"
+    vents = [r for r in records_of(recs, "VENT") if r.get("SURF_ID") == "INSULATION"]
+    # fire room: 6 faces minus the interface with the corridor (y = 3.4) = 5 insulated faces
+    assert len(vents) == 5 and not any(r.floats("XB")[2] == 3.4 and r.floats("XB")[3] == 3.4 for r in vents)
+    assert "MATL_ID(1:2,1)='CALCIUM SILICATE','GYPSUM'" in text
+    bad = ScenarioSpec(**dict(THREE_ROOMS, fire=fire, building=b, mesh={**mesh, "block_materials": ["steel"]}))
+    assert any("one entry per mesh block" in e for e in V.structural(bad).errors)
+    for m in MATERIALS:
+        ScenarioSpec(**dict(THREE_ROOMS, building={**THREE_ROOMS["building"], "wall_material": m}))

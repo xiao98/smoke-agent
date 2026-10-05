@@ -67,6 +67,8 @@ def structural(spec: ScenarioSpec) -> Report:
     for i, b in enumerate(spec.mesh.blocks):
         if any(b[2 * a] < d[2 * a] - 1e-6 or b[2 * a + 1] > d[2 * a + 1] + 1e-6 or b[2 * a + 1] <= b[2 * a] for a in range(3)):
             r.errors.append(f"mesh block {i + 1} must lie inside the domain with max > min")
+    if spec.mesh.block_materials and len(spec.mesh.block_materials) != len(spec.mesh.blocks):
+        r.errors.append("mesh.block_materials must have one entry per mesh block (use null for the default)")
     if spec.mesh.blocks and not any(b[0] <= fx[0] and fx[1] <= b[1] and b[2] <= fx[2] and fx[3] <= b[3] and b[4] <= fx[4] <= b[5]
                                     for b in spec.mesh.blocks):
         r.errors.append("fire footprint is not inside any mesh block")
