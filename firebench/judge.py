@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import re
 import sys
 from dataclasses import dataclass, field
@@ -98,7 +99,28 @@ def gate2_run(bundle: Path, chid: str, spec: ScenarioSpec | None) -> GateResult:
     return GateResult("run", ok, detail)
 
 
-RELATIVE_FACTOR = 1.25  # agent passes a reference if its error <= 1.25 x the official input's error on the same reference
+RELATIVE_FACTOR = 1.25  # agent also passes a reference if its error <= 1.25 x the official input's error on the same reference
+
+NIST_UNCERTAINTY = HERE.parent / "configs" / "nist_model_uncertainty.yaml"
+
+
+def load_nist_uncertainty(path: Path = NIST_UNCERTAINTY) -> dict:
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def nist_band(exp_value: float, fds_value: float, quantity: str, table: dict) -> dict | None:
+    """FDS Validation Guide consistency test: z = |ln(M/E) - ln(bias)| / sqrt(sigma_e^2 + sigma_m^2), ok when z <= k.
+    Returns None when the quantity is not in Table 16.1 (caller falls back to the case's absolute tolerance)."""
+    q = table["quantities"].get(quantity)
+    if q is None:
+        return None
+    sigma = math.sqrt(q["sigma_e"] ** 2 + q["sigma_m"] ** 2)
+    k = float(table.get("k_sigma", 2.0))
+    bias = float(q["bias"])
+    if exp_value == 0 or fds_value == 0 or (exp_value > 0) != (fds_value > 0):
+        return {"ok": False, "z": float("inf"), "sigma": sigma, "bias": bias, "band": [bias * math.exp(-k * sigma) - 1, bias * math.exp(k * sigma) - 1]}
+    z = abs(math.log(fds_value / exp_value) - math.log(bias)) / sigma
+    return {"ok": z <= k, "z": z, "sigma": sigma, "bias": bias, "band": [bias * math.exp(-k * sigma) - 1, bias * math.exp(k * sigma) - 1]}
 
 
 def official_errors(official_result: Path | None) -> dict[tuple[str, str], float]:
@@ -120,6 +142,7 @@ def gate3_experiment(bundle: Path, chid: str, case: dict, exp_repo: Path, offici
     if not devc.is_file():
         return GateResult("experiment", False, "no _devc.csv")
     ceiling = official_errors(official_result)
+    nist = load_nist_uncertainty() if NIST_UNCERTAINTY.is_file() else {"quantities": {}}
     items, n_ok = [], 0
     for idx, ref in enumerate(case["references"]):
         try:
@@ -140,15 +163,26 @@ def gate3_experiment(bundle: Path, chid: str, case: dict, exp_repo: Path, offici
             continue
         rel = abs(mf - me) / abs(me)
         off = ceiling.get((ref["fds_col"], str(idx)))
-        tol = max(ref["tol_rel"], RELATIVE_FACTOR * off) if off is not None else ref["tol_rel"]
-        ok = rel <= tol
+        band = nist_band(me, mf, ref.get("quantity", ""), nist)
+        if band is not None:
+            ok = band["ok"]
+            tol = max(abs(band["band"][0]), abs(band["band"][1]))  # the wider side of the NIST band, for the report
+            basis_item = "nist"
+        else:
+            tol = ref["tol_rel"]
+            ok = rel <= tol
+            basis_item = "absolute"
+        if not ok and off is not None and rel <= RELATIVE_FACTOR * off:
+            ok, basis_item = True, "official_ceiling"  # FDS's own input misses this point by as much
         n_ok += ok
         items.append({"fds_col": ref["fds_col"], "quantity": ref["kind"], "metric": ref["metric"], "exp": round(me, 2),
                       "fds": round(mf, 2), "rel_err": round(rel, 3), "tol": round(tol, 3),
+                      "nist_z": None if band is None else round(band["z"], 2), "nist_bias": None if band is None else band["bias"],
+                      "nist_sigma": None if band is None else round(band["sigma"], 3), "basis": basis_item,
                       "official_rel_err": None if off is None else round(off, 3), "ok": ok})
     frac = n_ok / len(items) if items else 0.0
     passed = bool(items) and frac >= float(case.get("gate3_min_fraction", 0.67))
-    basis = "vs official ceiling" if ceiling else "absolute tolerance"
+    basis = "NIST 2-sigma band" + (" / official ceiling" if ceiling else "")
     return GateResult("experiment", passed, f"{n_ok}/{len(items)} references within tolerance ({basis})", items)
 
 

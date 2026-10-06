@@ -1,0 +1,18 @@
+# Model and experimental uncertainty per quantity, copied from the FDS Validation Guide (FDS 6.11.1),
+# Chapter 16, Table 16.1 "Summary statistics for all quantities of interest".
+#   sigma_e : relative experimental uncertainty
+#   sigma_m : relative standard deviation of the model (FDS) prediction
+#   bias    : mean ratio predicted / measured (delta)
+# A comparison point is "consistent with FDS" when |ln(M/E) - ln(bias)| <= k * sqrt(sigma_e^2 + sigma_m^2), k = 2.
+# The agent is judged against the same band as the NIST input, so a point FDS itself cannot predict
+# is not held against the agent.
+source: "FDS Validation Guide, FDS 6.11.1, Table 16.1 (https://github.com/firemodels/fds/releases/download/FDS-6.11.1/FDS_Validation_Guide.pdf)"
+k_sigma: 2.0
+quantities:
+  "HGL Temperature; Forced Ventilation": {sigma_e: 0.07, sigma_m: 0.16, bias: 1.16, datasets: 6, points: 158}
+  "HGL Temperature; Natural Ventilation": {sigma_e: 0.07, sigma_m: 0.10, bias: 1.07, datasets: 18, points: 330}
+  "HGL Temperature; No Ventilation": {sigma_e: 0.07, sigma_m: 0.09, bias: 1.09, datasets: 3, points: 32}
+  "HGL Depth": {sigma_e: 0.05, sigma_m: 0.14, bias: 1.09, datasets: 15, points: 278}
+  "Ceiling Jet Temperature": {sigma_e: 0.07, sigma_m: 0.13, bias: 1.08, datasets: 22, points: 1061}
+  "Plume Temperature": {sigma_e: 0.07, sigma_m: 0.42, bias: 1.00, datasets: 16, points: 480}
+  "Target Temperature": {sigma_e: 0.07, sigma_m: 0.19, bias: 1.06, datasets: 11, points: 1415}
