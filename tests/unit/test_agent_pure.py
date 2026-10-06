@@ -65,3 +65,35 @@ def test_patch_dicts_roundtrip():
     # strict structured-output schema: every patch field is declared (no free-form dict)
     schema = ReviewOut.model_json_schema()
     assert set(schema["$defs"]["PatchOp"]["properties"]) == {"op", "path", "value_json"}
+
+
+def _hrr_csv(tmp_path, values):
+    p = tmp_path / "x_hrr.csv"
+    lines = ["s,kW", "Time,HRR"] + [f"{t},{v}" for t, v in values]
+    p.write_text("\n".join(lines) + "\n")
+    return p
+
+
+def test_hrr_check_plateau_burst_and_sealed(tmp_path):
+    from fds.criteria import hrr_check
+    from fds.spec import ScenarioSpec
+    from test_writer import THREE_ROOMS
+    fire = {"location_xb": [1.5, 2.5, 1.75, 2.25, 0, 0], "hrr_peak_kw": 110, "growth": "constant",
+            "hrr_curve": [[0, 0], [1, 110], [900, 110], [901, 0]]}
+    spec = ScenarioSpec(**dict(THREE_ROOMS, fire=fire, sim={"t_end_s": 950}))
+    # NBS 100O-like: plateau at 110, burst to 348 around 860 s, fire dies at 895 s (before ramp-off)
+    vals = [(t, 110.0 if t < 859 else 348.0 if t < 869 else 110.0 if t < 895 else 0.0) for t in range(951)]
+    hc = hrr_check(spec, _hrr_csv(tmp_path, vals))
+    assert hc["ok"] and hc["statistic"] == "plateau_median" and abs(hc["sim"] - 110) < 1 and hc["starved_frac"] < 0.05
+    # sealed room: fire starves at 200 s
+    vals = [(t, 110.0 if t < 200 else 0.0) for t in range(951)]
+    hc = hrr_check(spec, _hrr_csv(tmp_path, vals))
+    assert not hc["ok"] and hc["starved_frac"] > 0.5
+    # half the burner face lost to the grid: median 56 kW
+    vals = [(t, 56.0) for t in range(951)]
+    assert not hrr_check(spec, _hrr_csv(tmp_path, vals))["ok"]
+    # still growing at t_end: smoothed-peak statistic
+    spec2 = ScenarioSpec(**dict(THREE_ROOMS, sim={"t_end_s": 30}))
+    vals = [(t, 500 * min(1, t / 103) ** 2) for t in range(31)]
+    hc = hrr_check(spec2, _hrr_csv(tmp_path, vals))
+    assert hc["statistic"] == "smoothed_peak" and hc["ok"]

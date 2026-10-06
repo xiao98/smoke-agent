@@ -92,11 +92,9 @@ def gate2_run(bundle: Path, chid: str, spec: ScenarioSpec | None) -> GateResult:
     ok = done and not errs
     hrr_csv = bundle / f"{chid}_hrr.csv"
     if ok and spec is not None and hrr_csv.is_file():
-        peak = C.read_hrr_peak(hrr_csv)
-        exp = C.expected_hrr_peak(spec, spec.sim.t_end_s)
-        tol = C.hrr_tolerance(spec, spec.sim.t_end_s)
-        ok = abs(peak - exp) <= tol * exp
-        detail += f" hrr_sim={peak:.0f} hrr_expected={exp:.0f} tol={tol:.0%}"
+        hc = C.hrr_check(spec, hrr_csv, spec.sim.t_end_s)
+        ok = hc["ok"]
+        detail += f" hrr_sim={hc['sim']:.0f} hrr_expected={hc['expected']:.0f} tol={hc['tol']:.0%} stat={hc['statistic']} starved={hc['starved_frac']:.0%}"
     return GateResult("run", ok, detail)
 
 
