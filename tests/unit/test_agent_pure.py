@@ -49,3 +49,19 @@ def test_expected_hrr_peak():
     spec = ScenarioSpec(**THREE_ROOMS)           # 500 kW fast: t_peak ~103 s
     assert expected_hrr_peak(spec, 300) == 500
     assert 25 < expected_hrr_peak(spec, 30) < 35  # ((30-5)/103)^2 * 500 ~ 29 kW, mid-window
+
+
+def test_patch_dicts_roundtrip():
+    from fds.agent import PatchOp, ReviewOut, patch_dicts
+    out = ReviewOut(analysis="x", patch=[
+        PatchOp(op="replace", path="/building/obstructions/5/xb", value_json="[10.9, 11.2, 0.0, 0.3, 0.0, 0.5]"),
+        PatchOp(op="add", path="/escape_paths/-", value_json='{"id": "P2", "polyline": [[0,0,1.8],[1,0,1.8]]}'),
+        PatchOp(op="remove", path="/fire/growth"),
+        PatchOp(op="replace", path="/title", value_json="not json"),
+    ])
+    d = patch_dicts(out.patch)
+    assert d[0]["value"] == [10.9, 11.2, 0.0, 0.3, 0.0, 0.5] and d[1]["value"]["id"] == "P2"
+    assert "value" not in d[2] and d[3]["value"] == "not json"
+    # strict structured-output schema: every patch field is declared (no free-form dict)
+    schema = ReviewOut.model_json_schema()
+    assert set(schema["$defs"]["PatchOp"]["properties"]) == {"op", "path", "value_json"}

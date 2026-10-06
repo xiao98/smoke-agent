@@ -15,7 +15,7 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field, ValidationError
 
@@ -276,14 +276,37 @@ def run(state: dict) -> dict:
 
 REVIEW_SYSTEM = """You are debugging an FDS smoke simulation that failed. You will see the ScenarioSpec JSON that generated the
 input file, the structured error list, and earlier attempts. Decide the smallest change to the ScenarioSpec that fixes the
-root cause, and express it as RFC 6902 JSON patch operations (op: add|replace|remove, path: JSON pointer, value).
+root cause, and express it as RFC 6902 JSON patch operations (op: add|replace|remove, path: JSON pointer into the
+ScenarioSpec, value_json: the new value encoded as a JSON string, e.g. "[10.9, 11.2, 0.0, 0.3, 0.0, 0.5]" or "0.1").
 Never change the user's intent (fire size, building, escape paths) unless the error makes it physically impossible; prefer
 mesh, timing, placement and vent fixes. If no change can fix it, return an empty patch and explain."""
 
 
+class PatchOp(BaseModel):
+    """One RFC 6902 operation. The value travels as a JSON string: strict json_schema structured output cannot
+    express a free-form `value` (a bare `dict` item became an object with no allowed fields, so the reviewer could
+    never return a patch and wrote it into the analysis text instead)."""
+    op: Literal["add", "replace", "remove"]
+    path: str = Field(..., description="JSON pointer, e.g. /building/obstructions/5/xb")
+    value_json: str = Field("", description="JSON-encoded value for add/replace; empty for remove")
+
+
 class ReviewOut(BaseModel):
     analysis: str
-    patch: list[dict] = Field(default_factory=list)
+    patch: list[PatchOp] = Field(default_factory=list)
+
+
+def patch_dicts(ops: list[PatchOp]) -> list[dict]:
+    out = []
+    for p in ops:
+        d = {"op": p.op, "path": p.path}
+        if p.op != "remove":
+            try:
+                d["value"] = json.loads(p.value_json)
+            except (json.JSONDecodeError, TypeError):
+                d["value"] = p.value_json
+        out.append(d)
+    return out
 
 
 def review(state: dict) -> dict:
@@ -310,19 +333,20 @@ def review(state: dict) -> dict:
     out = state["llm_service"].invoke(prompt, REVIEW_SYSTEM, pydantic_obj=ReviewOut)
     if isinstance(out, dict):
         out = ReviewOut.model_validate(out)
+    patch = patch_dicts(out.patch)
     log_review(out.analysis, f"fds_review_loop_{loop}")
     print(f"<fds_reviewer loop={loop}>{out.analysis[:300]}</fds_reviewer>")
     try:
         with open(Path(state["case_dir"]) / "reviews.jsonl", "a", encoding="utf-8") as fh:
-            fh.write(json.dumps({"loop": loop, "errors": errs, "analysis": out.analysis, "patch": out.patch}, ensure_ascii=False) + "\n")
+            fh.write(json.dumps({"loop": loop, "errors": errs, "analysis": out.analysis, "patch": patch}, ensure_ascii=False) + "\n")
     except OSError:
         pass
-    history += f"\n--- loop {loop} ---\nerrors: {errs[:3]}\nanalysis: {out.analysis[:500]}\npatch: {json.dumps(out.patch)[:500]}\n"
+    history += f"\n--- loop {loop} ---\nerrors: {errs[:3]}\nanalysis: {out.analysis[:500]}\npatch: {json.dumps(patch)[:500]}\n"
     return {
         "loop_count": loop,
         "error_fingerprints": fps,
         "review_analysis": out.analysis,
-        "rewrite_plan": {"patch": out.patch, "target_files": [f"{state['case_name']}.fds"]},
+        "rewrite_plan": {"patch": patch, "target_files": [f"{state['case_name']}.fds"]},
         "input_writer_mode": "rewrite",
         "history_text": history,
     }
