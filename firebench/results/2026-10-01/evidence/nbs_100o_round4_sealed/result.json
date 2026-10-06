@@ -1,0 +1,123 @@
+{
+  "case": "nbs_100o",
+  "chid": "nbs_100o",
+  "mode": "agent",
+  "passed": false,
+  "gates": [
+    {
+      "name": "init",
+      "passed": true,
+      "detail": "fds+smv present",
+      "items": []
+    },
+    {
+      "name": "run",
+      "passed": true,
+      "detail": "completed=True errors=0 hrr_sim=119 hrr_expected=110 tol=10%",
+      "items": []
+    },
+    {
+      "name": "experiment",
+      "passed": false,
+      "detail": "0/8 references within tolerance (vs official ceiling)",
+      "items": [
+        {
+          "fds_col": "Layer Temp 1",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 313.0,
+          "fds": 231.75,
+          "rel_err": 0.26,
+          "tol": 0.15,
+          "official_rel_err": 0.05,
+          "ok": false
+        },
+        {
+          "fds_col": "Layer Temp 3",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 116.12,
+          "fds": 0.0,
+          "rel_err": 1.0,
+          "tol": 0.15,
+          "official_rel_err": 0.056,
+          "ok": false
+        },
+        {
+          "fds_col": "Layer Temp 4",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 107.2,
+          "fds": 0.0,
+          "rel_err": 1.0,
+          "tol": 0.15,
+          "official_rel_err": 0.044,
+          "ok": false
+        },
+        {
+          "fds_col": "Layer Temp 5",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 100.33,
+          "fds": 0.0,
+          "rel_err": 1.0,
+          "tol": 0.15,
+          "official_rel_err": 0.003,
+          "ok": false
+        },
+        {
+          "fds_col": "Layer Height 1",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.56,
+          "fds": -2.22,
+          "rel_err": 0.422,
+          "tol": 0.15,
+          "official_rel_err": 0.015,
+          "ok": false
+        },
+        {
+          "fds_col": "Layer Height 3",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.68,
+          "fds": 0.0,
+          "rel_err": 1.0,
+          "tol": 0.15,
+          "official_rel_err": 0.046,
+          "ok": false
+        },
+        {
+          "fds_col": "Layer Height 4",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.7,
+          "fds": 0.0,
+          "rel_err": 1.0,
+          "tol": 0.15,
+          "official_rel_err": 0.108,
+          "ok": false
+        },
+        {
+          "fds_col": "Layer Height 5",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.87,
+          "fds": 0.0,
+          "rel_err": 1.0,
+          "tol": 0.15,
+          "official_rel_err": 0.098,
+          "ok": false
+        }
+      ]
+    },
+    {
+      "name": "criteria",
+      "passed": true,
+      "detail": "recomputed ASET matches stored criteria.json",
+      "items": []
+    }
+  ],
+  "run_tag": "2026-10-01",
+  "bundle": "/home/xiaohao/work/smoke-agent/firebench/runs/2026-10-01/agent/nbs_100o"
+}

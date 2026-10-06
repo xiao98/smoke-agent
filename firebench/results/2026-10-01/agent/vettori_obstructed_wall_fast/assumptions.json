@@ -1,0 +1,11 @@
+[
+  "Burner footprint enlarged from 0.60 x 0.60 m to x 4.30..4.90, y 0.00..0.80 m (0.48 m2), still on top of the 0.30 m block. This keeps the HRRPUA at about 2190 kW/m2, within the 250-2500 kW/m2 limit. The stated footprint would give 1055/0.36 = 2930 kW/m2, which is over the limit.",
+  "hrr_peak_kw is set to 1053 kW, the highest value in the ramp. The stated peak of 1055 kW differs from the ramp by only 0.2%.",
+  "The design-fire curve is used exactly as given and overrides the t-squared growth. growth='constant' is only a placeholder.",
+  "Fuel is methane (CH4): heat of combustion 50,000 kJ/kg, CO yield 0, soot yield 0.001 (the minimum needed, since the schema requires a value above 0).",
+  "Uniform cell size of 0.1 m, which gives about 92 x 56 x 26 cells (the user's 96 x 54 x 30 grid is about 0.096 x 0.104 x 0.088 m).",
+  "Domain walls are closed. Default INERT surfaces are used for all walls and obstructions, since no materials were specified.",
+  "No mechanical exhaust or make-up air. The only opening to the outside is the passive ceiling vent at x 8.30..9.20, y 2.90..5.60.",
+  "Escape path at 1.8 m height with RSET = 120 s. The simulation ends at 100 s as requested, so the stretch from 100 s to 120 s is not modelled. Conditions at 100 s should be treated as a lower bound for this check.",
+  "Output intervals use the defaults: devices every 1 s and slices every 5 s."
+]

@@ -1,0 +1,155 @@
+{
+  "case": "nbs_100z",
+  "chid": "NBS_100Z",
+  "mode": "official",
+  "passed": true,
+  "gates": [
+    {
+      "name": "init",
+      "passed": true,
+      "detail": "fds+smv present",
+      "items": []
+    },
+    {
+      "name": "run",
+      "passed": true,
+      "detail": "completed=True errors=0",
+      "items": []
+    },
+    {
+      "name": "experiment",
+      "passed": true,
+      "detail": "8/8 references within tolerance (NIST 2-sigma band)",
+      "items": [
+        {
+          "fds_col": "Layer Temp 1",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 287.67,
+          "fds": 264.1,
+          "rel_err": 0.082,
+          "tol": 0.366,
+          "nist_z": 1.25,
+          "nist_bias": 1.07,
+          "nist_sigma": 0.122,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Temp 3",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 76.51,
+          "fds": 80.6,
+          "rel_err": 0.053,
+          "tol": 0.366,
+          "nist_z": 0.13,
+          "nist_bias": 1.07,
+          "nist_sigma": 0.122,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Temp 5",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 69.64,
+          "fds": 72.76,
+          "rel_err": 0.045,
+          "tol": 0.366,
+          "nist_z": 0.2,
+          "nist_bias": 1.07,
+          "nist_sigma": 0.122,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Temp 8",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 38.59,
+          "fds": 44.14,
+          "rel_err": 0.144,
+          "tol": 0.366,
+          "nist_z": 0.55,
+          "nist_bias": 1.07,
+          "nist_sigma": 0.122,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Height 1",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.58,
+          "fds": -1.46,
+          "rel_err": 0.075,
+          "tol": 0.467,
+          "nist_z": 1.1,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Height 3",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.16,
+          "fds": -1.15,
+          "rel_err": 0.009,
+          "tol": 0.467,
+          "nist_z": 0.64,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Height 5",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.17,
+          "fds": -1.45,
+          "rel_err": 0.242,
+          "tol": 0.467,
+          "nist_z": 0.88,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Height 8",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.38,
+          "fds": -1.6,
+          "rel_err": 0.16,
+          "tol": 0.467,
+          "nist_z": 0.42,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "criteria",
+      "passed": true,
+      "detail": "official input: no spec, gate skipped",
+      "items": []
+    }
+  ],
+  "run_tag": "2026-10-01",
+  "bundle": "firebench/runs/2026-10-01/official/nbs_100z"
+}

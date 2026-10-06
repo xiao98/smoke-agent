@@ -1,0 +1,233 @@
+{
+  "chid": "nbs_100a_multiroom",
+  "title": "Essai multi-pieces NBS 100A - bruleur methane 110 kW",
+  "building": {
+    "domain": {
+      "x": [
+        0.0,
+        12.2
+      ],
+      "y": [
+        0.0,
+        5.8
+      ],
+      "z": [
+        0.0,
+        2.4
+      ]
+    },
+    "wall_material": "calcium_silicate_on_gypsum",
+    "obstructions": [
+      {
+        "id": "zone_non_utilisee",
+        "xb": [
+          0.0,
+          9.8,
+          0.0,
+          3.4,
+          0.0,
+          2.4
+        ],
+        "surf_id": "INERT",
+        "material": null,
+        "holes": []
+      },
+      {
+        "id": "dalle_chambre_feu",
+        "xb": [
+          9.8,
+          12.2,
+          0.0,
+          3.4,
+          2.2,
+          2.4
+        ],
+        "surf_id": "INERT",
+        "material": "ceramic_fiber",
+        "holes": []
+      },
+      {
+        "id": "bloc_plein_chambre",
+        "xb": [
+          9.8,
+          11.1,
+          2.3,
+          3.4,
+          0.0,
+          2.2
+        ],
+        "surf_id": "INERT",
+        "material": "ceramic_fiber",
+        "holes": []
+      },
+      {
+        "id": "plafond_couloir_acces",
+        "xb": [
+          11.1,
+          12.2,
+          2.3,
+          3.4,
+          2.0,
+          2.2
+        ],
+        "surf_id": "INERT",
+        "material": "ceramic_fiber",
+        "holes": []
+      },
+      {
+        "id": "cloison_chambre_couloir",
+        "xb": [
+          9.8,
+          12.2,
+          3.3,
+          3.4,
+          0.0,
+          2.2
+        ],
+        "surf_id": "INERT",
+        "material": "ceramic_fiber",
+        "holes": [
+          {
+            "xb": [
+              11.2,
+              12.0,
+              3.3,
+              3.4,
+              0.0,
+              1.6
+            ]
+          }
+        ]
+      },
+      {
+        "id": "socle_bruleur",
+        "xb": [
+          10.9,
+          11.2,
+          0.0,
+          0.3,
+          0.0,
+          0.5
+        ],
+        "surf_id": "INERT",
+        "material": "steel",
+        "holes": []
+      }
+    ],
+    "openings": [
+      {
+        "id": "porte_bout_couloir",
+        "xb": [
+          0.0,
+          0.0,
+          4.2,
+          5.0,
+          0.0,
+          2.0
+        ],
+        "type": "open"
+      }
+    ]
+  },
+  "fire": {
+    "location_xb": [
+      10.9,
+      11.2,
+      0.0,
+      0.3,
+      0.5,
+      0.5
+    ],
+    "hrr_peak_kw": 110.0,
+    "growth": "constant",
+    "time_to_peak_s": 1.0,
+    "hrr_curve": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        110.0
+      ],
+      [
+        900.0,
+        110.0
+      ],
+      [
+        901.0,
+        0.0
+      ]
+    ],
+    "fuel": {
+      "name": "METHANE",
+      "soot_yield": 0.005,
+      "co_yield": 0.0,
+      "heat_of_combustion": 50000.0,
+      "c": 1.0,
+      "h": 4.0,
+      "o": 0.0,
+      "n": 0.0
+    }
+  },
+  "smoke_control": {
+    "exhaust": [],
+    "makeup": [],
+    "curtains": []
+  },
+  "escape_paths": [
+    {
+      "id": "evacuation_couloir",
+      "polyline": [
+        [
+          11.6,
+          4.6,
+          1.8
+        ],
+        [
+          6.0,
+          4.6,
+          1.8
+        ],
+        [
+          0.2,
+          4.6,
+          1.8
+        ]
+      ],
+      "rset_s": 120.0
+    }
+  ],
+  "mesh": {
+    "cell_size": 0.1,
+    "max_cells_per_mesh": 1000000,
+    "blocks": [
+      [
+        9.8,
+        12.2,
+        0.0,
+        3.4,
+        0.0,
+        2.2
+      ],
+      [
+        0.0,
+        12.2,
+        3.4,
+        5.8,
+        0.0,
+        2.4
+      ]
+    ],
+    "block_materials": [
+      "ceramic_fiber",
+      null
+    ]
+  },
+  "sim": {
+    "t_end_s": 950.0,
+    "dt_devc_s": 1.0,
+    "dt_slcf_s": 5.0
+  },
+  "thresholds_profile": "fr_default"
+}

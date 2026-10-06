@@ -1,0 +1,65 @@
+{
+  "case": "llnl_04",
+  "chid": "llnl_04",
+  "mode": "agent",
+  "passed": true,
+  "gates": [
+    {
+      "name": "init",
+      "passed": true,
+      "detail": "fds+smv present",
+      "items": []
+    },
+    {
+      "name": "run",
+      "passed": true,
+      "detail": "completed=True errors=0 hrr_sim=300 hrr_expected=300 tol=10% stat=plateau_median starved=20%",
+      "items": []
+    },
+    {
+      "name": "experiment",
+      "passed": true,
+      "detail": "2/2 references within tolerance (NIST 2-sigma band / official ceiling)",
+      "items": [
+        {
+          "fds_col": "West_Upper_TCs",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 165.0,
+          "fds": 152.62,
+          "rel_err": 0.075,
+          "tol": 0.369,
+          "nist_z": 1.44,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.114,
+          "basis": "nist",
+          "official_rel_err": 0.108,
+          "ok": true
+        },
+        {
+          "fds_col": "West_Middle_TCs",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 134.0,
+          "fds": 143.43,
+          "rel_err": 0.07,
+          "tol": 0.369,
+          "nist_z": 0.16,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.114,
+          "basis": "nist",
+          "official_rel_err": 0.273,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "criteria",
+      "passed": true,
+      "detail": "recomputed ASET matches stored criteria.json",
+      "items": []
+    }
+  ],
+  "run_tag": "2026-10-01",
+  "bundle": "firebench/runs/2026-10-01/agent/llnl_04"
+}

@@ -1,0 +1,125 @@
+{
+  "case": "ul_nist_vents_test_2",
+  "chid": "ul_nist_vent_test_2",
+  "mode": "agent",
+  "passed": true,
+  "gates": [
+    {
+      "name": "init",
+      "passed": true,
+      "detail": "fds+smv present",
+      "items": []
+    },
+    {
+      "name": "run",
+      "passed": true,
+      "detail": "completed=True errors=0 hrr_sim=2116 hrr_expected=2144 tol=10% stat=plateau_median starved=0%",
+      "items": []
+    },
+    {
+      "name": "experiment",
+      "passed": true,
+      "detail": "6/6 references within tolerance (NIST 2-sigma band / official ceiling)",
+      "items": [
+        {
+          "fds_col": "T1-TC2",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 861.4,
+          "fds": 693.71,
+          "rel_err": 0.195,
+          "tol": 0.451,
+          "nist_z": 1.99,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.186,
+          "ok": true
+        },
+        {
+          "fds_col": "T1-TC2",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 509.54,
+          "fds": 695.11,
+          "rel_err": 0.364,
+          "tol": 0.451,
+          "nist_z": 1.58,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.298,
+          "ok": true
+        },
+        {
+          "fds_col": "T1-TC2",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 624.05,
+          "fds": 690.52,
+          "rel_err": 0.107,
+          "tol": 0.451,
+          "nist_z": 0.16,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.052,
+          "ok": true
+        },
+        {
+          "fds_col": "T2-TC2",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 526.14,
+          "fds": 486.22,
+          "rel_err": 0.076,
+          "tol": 0.451,
+          "nist_z": 1.06,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.548,
+          "ok": true
+        },
+        {
+          "fds_col": "T2-TC2",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 509.2,
+          "fds": 511.73,
+          "rel_err": 0.005,
+          "tol": 0.451,
+          "nist_z": 0.49,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.215,
+          "ok": true
+        },
+        {
+          "fds_col": "T2-TC2",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 444.11,
+          "fds": 476.41,
+          "rel_err": 0.073,
+          "tol": 0.451,
+          "nist_z": 0.05,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.125,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "criteria",
+      "passed": true,
+      "detail": "recomputed ASET matches stored criteria.json",
+      "items": []
+    }
+  ],
+  "run_tag": "2026-10-01",
+  "bundle": "firebench/runs/2026-10-01/agent/ul_nist_vents_test_2"
+}

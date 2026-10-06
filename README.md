@@ -1,410 +1,136 @@
-# Foam-Agent    <a href="https://arxiv.org/abs/2505.04997"><img src="https://img.shields.io/badge/arXiv-2505.04997-b31b1b.svg" alt="Paper"></a>
-<p align="center">
-  <img src="overview.png" alt="Foam-Agent System Architecture" width="800">
-</p>
+# SmokeAgent
 
-<p align="center">
-    <em>An End-to-End Composable Multi-Agent Framework for Automating CFD Simulation in OpenFOAM</em>
-</p>
+**An LLM agent that turns a written smoke-control brief into a validated FDS study.**
+Research prototype, built for French performance-based fire-safety studies (*ingénierie du désenfumage*), evaluated against NIST's own validation experiments.
 
-**Foam-Agent** automates the **OpenFOAM**-based CFD simulation workflow from a natural language prompt or an existing case. It manages meshing, case setup, execution, error correction, and optional post-processing. The project's reported [FoamBench](https://arxiv.org/abs/2509.20374) evaluation covers 110 simulation tasks and records a **100% success rate** with Claude Opus 4.6; this is a benchmark result, not a guarantee for arbitrary cases.
+> Status (2026-10-06): on the 10 "basic" FireBench cases, the agent reproduces FDS within the FDS Validation Guide's own uncertainty on **10/10** cases, from a French natural-language brief, with no human edits to the input files. See [FireBench](#firebench) for exactly what that does and does not mean.
 
-Visit [deepwiki.com/csml-rpi/Foam-Agent](https://deepwiki.com/csml-rpi/Foam-Agent) for a comprehensive introduction and to ask questions interactively.
+SmokeAgent is a fork of [Foam-Agent](https://github.com/csml-rpi/Foam-Agent) (MIT, Ling Yue et al., RPI) retargeted from OpenFOAM to [FDS 6.11.1](https://github.com/firemodels/fds) (NIST, public domain). The agent graph, retrieval corpus layout and LLM service are Foam-Agent's; everything under `src/fds/`, `firebench/`, `configs/` and `app/` is new. See [NOTICE](NOTICE).
 
-## Key Features
+## What it does
 
-- **End-to-End Workflow**: Meshing (including external Gmsh `.msh` files), case generation, local execution or Slurm submission, and optional PyVista visualization. Execution requires the corresponding runtime and infrastructure.
-- **Multi-Agent Workflow**: Architect, Input Writer, Runner, and Reviewer agents collaborate through a LangGraph pipeline with automatic error correction (up to 25 iterations).
-- **RAG-Enhanced Generation**: Hierarchical FAISS indices built from OpenFOAM tutorials provide context-specific retrieval for accurate configuration file generation.
-- **Composable Service Architecture**: Core functions are exposed as MCP tools, enabling integration with Claude Code, Cursor, and other agentic systems.
+```
+French/English brief ──► planner (LLM)  ──► ScenarioSpec (pydantic, units m/s/kW/°C)
+                                                │
+                    deterministic writer ◄──────┘        .fds (mesh, fire ramp, walls, vents, probes, slices)
+                                                │
+                          3-layer validation ───┤        structural · engineering (D*/dx, HRRPUA, make-up air) · FDS T_END=0
+                                                │
+                           FDS 6.11.1 (MPI) ────┤        progress.json, HRR check (plateau median + starvation)
+                                                │
+                     reviewer (LLM) ◄── errors ─┘        RFC 6902 JSON patch on the ScenarioSpec, never on the .fds
+                                                │
+                   criteria (no LLM) ───────────┤        ASET vs RSET per escape path, thresholds YAML with sources
+                                                │
+                              report ───────────┘        Smokeview slices, curves, French template
+```
 
-## Quick Start
+Design rules that fell out of the benchmark:
 
-### 1. Pull and run the Docker image
+- **The LLM never writes FDS namelists.** It fills a typed `ScenarioSpec`; a pure function writes the `.fds`. Every geometry rule that FDS enforces silently (grid snapping, mesh interfaces, surface precedence) lives in that function once, with a unit test.
+- **Repairs are JSON patches on the spec**, so a fix is reviewable and cannot corrupt the input file.
+- **Acceptance criteria contain no LLM.** Visibility, temperature, CO, layer height thresholds are a YAML file with a source line per value (`configs/thresholds_fr_default.yaml`); ASET/RSET is computed from the FDS device output.
+- **Materials, not INERT.** Walls default to 13 mm plasterboard with thermal properties from NBSIR 88-3752; INERT (isothermal cold walls) under-predicted hot-layer temperatures by 20–60 % on the NBS multi-room tests while getting layer heights right.
+
+## FireBench
+
+FireBench asks one question: *given only the natural-language brief, can the agent reproduce what FDS itself can do on an experiment NIST uses to validate FDS?*
+
+- **Cases** are generated from NIST's own `FDS_validation_dataplot_inputs.csv`: 171 building-smoke cases (NBS multi-room, Steckler, LLNL enclosure, UL/NIST vents, Vettori flat/sloped ceilings, …). Each `case.yaml` lists the experimental columns, the FDS device columns, the metric (max/min/mean, time windows) exactly as NIST's dataplot does.
+- **The brief** is a French paragraph drafted by the LLM from the NIST input and reviewed, describing geometry, fire, openings and escape path in words and numbers.
+- **The agent run** gets the brief plus NIST's reference `&DEVC` lines (so the same quantities are measured at the same points) and nothing else about the official input file.
+- **Four gates:** (1) FDS reads the input and starts; (2) the prescribed fire happened — plateau median of HRR within 10 %, fire not starved for more than half the plateau; (3) each reference quantity is consistent with the experiment within the **FDS Validation Guide 6.11.1, Table 16.1** band for that quantity, |ln(M/E) − ln δ| ≤ 2·√(σ_E² + σ_M²), at least 2/3 of references per case; (4) the ASET/RSET criteria recompute bit-identically from the bundle.
+- **Ceiling:** NIST's own input files are run and judged by the same gates. A point FDS itself misses is not held against the agent (secondary rule, ≤ 1.25 × the official error); in the current results no point needed it.
+
+### Results, run tag `2026-10-01`
+
+| case | experiment | agent | NIST input | agent refs in band | repair loops | agent wall time |
+| --- | --- | --- | --- | --- | --- | --- |
+| nbs_100a | NBS multi-room, 110 kW, open door | PASS | PASS | 8/8 | 0 | 8.9 h |
+| nbs_100o | NBS multi-room, 0.1 m vent only | PASS | PASS | 8/8 | 2 | 13 h |
+| nbs_100z | NBS multi-room, 3 rooms | PASS | PASS | 8/8 | 0 | 8.1 h |
+| steckler_010 | Steckler door flow | PASS | PASS | 1/1 | 1 | 19 h* |
+| steckler_011 | Steckler door flow | PASS | PASS | 1/1 | 0 | 0.6 h |
+| llnl_03 | LLNL enclosure, 400 kW, HVAC | PASS | PASS | 2/2 | 0 | 0.8 h |
+| llnl_04 | LLNL enclosure, 300 kW | PASS | PASS | 2/2 | 0 | 1.0 h |
+| ul_nist_vents_test_2 | UL/NIST vents, 2.1 MW | PASS | PASS | 6/6 | 0 | 3.5 h |
+| vettori_smooth_open_fast | Vettori flat ceiling | PASS | PASS | 6/6 | 0 | 1.2 h |
+| vettori_obstructed_wall_fast | Vettori obstructed ceiling | PASS | PASS | 3/4 | 0 | 1.9 h |
+
+\* first-pass run on the 0.05 m grid NIST uses, judged on its last 60 s; the brief now specifies 0.1 m (steckler_011: 0.6 h). All runs on one laptop (Ryzen 7840HS, no GPU, WSL2), 2–3 MPI ranks per case, overnight. Full `result.json` files, the agent's generated `.fds` inputs and the failed-attempt evidence are in `firebench/results/2026-10-01/`.
+
+**Read this before quoting the numbers.**
+
+- 10 cases out of 171 generated; the rest have not been run (laptop budget: 1–13 h per case).
+- The retrieval corpus (`database/fds-6.11`) is built from the NIST validation inputs, **including the benchmark cases**. The planner retrieves "similar validation cases" as examples, so for these 10 cases it can see the official input's style. A held-out variant that excludes the case's own directory from retrieval is the next step; until then the result says "the agent can reproduce FDS from a brief *with* the NIST corpus at hand", not "from scratch".
+- Grids are coarser than NIST's on some cases (0.15 m on UL vents, 0.1 m on Steckler vs 0.05 m) because of laptop time; gate 3 compares against the official input run with its own grid.
+- The French acceptance thresholds have not yet been reviewed by a practising *ingénieur sécurité incendie*. They are a starting point with sources, not an opinion on French regulation.
+
+### What the benchmark caught that FDS did not
+
+Every failure below produced a clean FDS run with no warning that mattered; only the comparison with experiment exposed it. Fixes are deterministic writer rules, each with a unit test (`tests/unit/test_writer.py`).
+
+| symptom | cause | fix |
+| --- | --- | --- |
+| HRR = 0 on NBS/UL | 0.1 m burner slab on a 0.2 m grid: FDS collapsed the slab, the FIRE face vanished | burner snapped to the grid, one cell thick, HRRPUA rescaled to keep total HRR |
+| fire room at 20 °C after 300 s, corridor never heated | `&HOLE` cut through a wall whose face lay on a mesh interface: FDS left a zero-thickness plate on the neighbour mesh and the door was sealed | obstructions minus holes written as box pieces (jambs + sill), no `&HOLE` |
+| layer heights right, temperatures 20–60 % low | all surfaces INERT (isothermal) | material catalogue (gypsum, concrete, ceramic fibre, calcium silicate, fire brick, steel) as building default, per obstruction and per mesh block |
+| pedestal hid half the burner face | LLM-placed pedestal snapped onto the burner cells | burner OBST written last (last listed surface wins) |
+| HRR "peak" 219 kW vs 110 kW prescribed on NBS 100O | near-closed room: unburnt methane burnt off in a 348 kW burst at 860 s, then the fire died — NIST's own input does the same | HRR gate = plateau median + fraction of plateau starved, not the peak |
+| Steckler comparison window unreachable | NIST uses `TIME_SHRINK_FACTOR` and compares 1500–1800 s | per-case steady-state window (last 60 s) |
+
+## Running it
+
+Linux or WSL2 (Ubuntu 24.04 tested), Python 3.12, FDS 6.11.1 on `PATH`, 16 GB RAM is enough.
 
 ```bash
-docker run -it \
-  -e FOAMAGENT_MODEL_PROVIDER=openai \
-  -e FOAMAGENT_MODEL_VERSION=gpt-5-mini \
-  -e OPENAI_API_KEY=your-key-here \
-  -p 7860:7860 \
-  --name foamagent \
-  leoyue123/foamagent
+# FDS 6.11.1: https://github.com/firemodels/fds/releases  (installs under ~/FDS/FDS6; source its FDS6VARS.sh)
+git clone https://github.com/xiao98/smoke-agent && cd smoke-agent
+uv venv --python 3.12 && source .venv/bin/activate && uv pip install -e ".[all]"
+
+export FOAMAGENT_SOLVER_TARGET=fds-6.11
+export FOAMAGENT_MODEL_PROVIDER=anthropic FOAMAGENT_MODEL_VERSION=claude-opus-5-5   # any LangChain provider works
+export ANTHROPIC_API_KEY=...                                                          # or ANTHROPIC_BASE_URL for a relay
+
+PYTHONPATH=src python -m pytest tests/unit -q                 # 24 tests, no FDS needed except one T_END=0 smoke test
+python src/main.py --prompt_path examples/brief_nbs_100a_fr.txt --output_dir runs/demo   # French brief -> .fds -> FDS -> criteria -> report
+./start_ui.sh                                                 # Streamlit demo on :8501 (4 pages, French)
 ```
 
-The container comes with OpenFOAM v10, Conda, and all dependencies pre-installed.
-
-> For a specific release: `docker pull leoyue123/foamagent:v2.0.0`
-
-### 2. Write your prompt
-
-Edit `user_requirement.txt` inside the container:
-
-```text
-do a Reynolds-Averaged Simulation (RAS) pitzdaily simulation. Use PIMPLE algorithm.
-The domain is a 2D millimeter-scale channel geometry. Boundary conditions specify a
-fixed velocity of 10m/s at the inlet (left), zero gradient pressure at the outlet
-(right), and no-slip conditions for walls. Use timestep of 0.0001 and output every
-0.01. Finaltime is 0.3. use nu value of 1e-5.
-```
-
-### 3. Run
+FireBench:
 
 ```bash
-python foambench_main.py --output ./output --prompt_path ./user_requirement.txt
+python firebench/build_cases.py --fds_repo ~/work/fds --exp_repo ~/work/exp      # 171 case.yaml from NIST's csv
+python firebench/run.py --mode official --only nbs_100a                           # NIST input, judged (the ceiling)
+python firebench/run.py --mode agent    --only nbs_100a                           # brief -> SmokeAgent -> judged
+python firebench/report.py --run_tag 2026-10-01                                   # markdown table
 ```
 
-That's it. Foam-Agent will plan the case, generate all OpenFOAM files, run the simulation, and fix errors automatically.
+The retrieval corpus for FDS (`database/fds-6.11`, 339 NIST validation inputs + 4 FAISS indices, Qwen3-Embedding-0.6B) is included; `database/script/build_fds_corpus.py` rebuilds it.
 
-### 4. Run an Existing Case
-
-An existing directory or ZIP is another Foam-Agent input. `case_import` preserves a read-only `original/` copy, creates a writable `work/` copy, and passes the discovered files, solver, mesh, time directories, and results to the normal Planner. Platform detection uses OpenFOAM header evidence, not dictionary filenames alone; specify `--openfoam_target` when the platform cannot be resolved. A case with `Allrun`, no detected issues, and no explicit prompt or custom mesh skips file planning and routes to Runner. This still requires LLM resources and routing calls. Other cases use LLM planning to select file changes or meshing, or fail when required physical information cannot be inferred. A configured target conflicting with the detected platform is recorded deterministically, then routed from Planner to Reviewer/Input Writer for repair; the Planner LLM does not decide whether the mismatch exists.
-
-The local runner uses the same cleanup policy for generated and imported cases. Prior run artifacts and nonzero time directories in `work/` are cleared before execution and are not automatically restored after failure. The `original/` copy remains available; the local workflow does not preserve restart data for continuation runs. HPC execution instead follows the generated Slurm script and the case's `Allrun`.
-
-```bash
-# Preserve the existing physical definition and run it
-python foambench_main.py \
-  --output ./output/imported-dam-break \
-  --case_path /path/to/damBreak
-
-# Modify an existing case according to a prompt, then run it
-python foambench_main.py \
-  --output ./output/modified-case \
-  --case_path /path/to/case \
-  --prompt_path ./requirements.txt \
-  --openfoam_target esi-v2006
-```
-
-Request visualization in the prompt for either generated or imported cases; the Planner determines whether it is needed. `--custom_mesh_path` can be combined with `--case_path` and `--prompt_path`; the Planner then decides whether Meshing must run before targeted dictionary changes and execution.
-
-`--case_path` accepts either a case directory or a ZIP archive. If an archive contains multiple cases, select one explicitly:
-
-```bash
-python foambench_main.py \
-  --output ./output/imported-case \
-  --case_path ./tutorials.zip \
-  --case_subdir multiphase/interFoam/laminar/damBreak/damBreak
-```
-
-The task directory contains `original/`, `work/`, and `report/`. `report/case_context.json` records the initial imported context, and `report/logs/` contains workflow logs; local `Allrun.out`, `Allrun.err`, and solver logs remain in `work/`. Existing `Allrun` is executed from `work/` unless the repair workflow changes it. Import rejects symbolic links in a source case. Replacing a non-empty output directory requires both Foam-Agent's ownership marker and `--overwrite_output` (or the API's `overwrite_output=true`). Import itself does not impose a command whitelist or rewrite the script.
-
-Generated and imported cases use the same Reviewer → Input Writer → Runner repair loop, with analysis history and the configured retry limit. Meshing failures also enter Reviewer: a file-scoped repair passes through Input Writer and returns to Meshing; without target files, it retries Meshing directly. Successful mesh repair resumes the pending workflow. Reviewer records error fingerprints and stops when consecutive fingerprints of the errors, filtered case files, and user requirement are identical. The graph recursion limit also bounds execution. There is no interactive clarification or task-resume step. If import planning cannot proceed, correct the inputs indicated by the failure reason and start a new run.
-
-If simulation succeeds but requested visualization fails, the workflow reports `partial_success`, `termination_reason=visualization_failed`, and `Simulation completed successfully, but visualization failed.` The CLI exits nonzero; MCP `run_case` returns the message and `visualization_error` separately from execution errors.
-
-## Configuration
-
-Settings live in `src/config.py` with sensible defaults. The supported environment variables below override model, embedding, OpenFOAM fork, and native target selection, which is useful for Docker and CI. Other configuration fields use their Python defaults or explicit CLI/API values.
-
-### LLM Provider and Model
-
-| Environment Variable | Purpose | Allowed Values |
-|---|---|---|
-| `FOAMAGENT_MODEL_PROVIDER` | LLM backend | `openai`, `openai-codex`, `anthropic`, `bedrock`, `ollama`, `deepseek` |
-| `FOAMAGENT_MODEL_VERSION` | Model identifier | A model supported by the selected provider; default `gpt-5.3-codex` |
-
-The default provider is `openai-codex`, which reads an OAuth token cache. Setting `OPENAI_API_KEY` alone does not switch to the `openai` provider; set both provider and model for API-key usage.
-
-Example:
-```bash
-docker run -it \
-  -e FOAMAGENT_MODEL_PROVIDER=anthropic \
-  -e ANTHROPIC_API_KEY=your-key-here \
-  -e FOAMAGENT_MODEL_VERSION=claude-sonnet-4-6 \
-  -p 7860:7860 \
-  leoyue123/foamagent
-```
-
-### Embedding Provider and Model
-
-| Environment Variable | Purpose | Allowed Values |
-|---|---|---|
-| `FOAMAGENT_EMBEDDING_PROVIDER` | Embedding backend | `openai`, `huggingface`, `ollama` |
-| `FOAMAGENT_EMBEDDING_MODEL` | Embedding model | e.g., `Qwen/Qwen3-Embedding-0.6B`, `text-embedding-3-small` |
-
-Defaults to `huggingface` with `Qwen/Qwen3-Embedding-0.6B` (runs locally, no API key needed).
-
-### API Keys
-
-| Variable | When needed |
-|---|---|
-| `OPENAI_API_KEY` | Using `openai` provider |
-| `ANTHROPIC_API_KEY` | Using `anthropic` provider |
-| `DEEPSEEK_API_KEY` | Using `deepseek` provider |
-| AWS credentials | Using `bedrock` provider |
-
-### Input Writer Generation Mode
-
-Set in `src/config.py` via `input_writer_generation_mode`:
-
-| Mode | Behavior | Best for |
-|---|---|---|
-| `sequential_dependency` | Files generated in order with cross-file context | Expensive runs (HPC, long simulations) |
-| `parallel_no_context` | Files generated in parallel, no cross-file context | Fast local runs where retry is cheap |
-
-### Reported Benchmark Results
-
-These are the project's recorded benchmark results, not guarantees for the current working tree, native ESI v2006, or arbitrary imported cases.
-
-| Framework | Model | Basic | Advanced |
-|---|---|---:|---:|
-| FoamAgent 2.0.0 (10 loops) | Opus 4.6 | 85.45% | 100% |
-| FoamAgent 2.0.0 (25 loops) | Opus 4.6 | 100% | 100% |
-| FoamAgent 2.0.0 (25 loops) | Sonnet 4.6 | 87.88% | 75.00% |
-| FoamAgent 2.0.0 (25 loops) | Haiku 4.6 | 54.55% | 37.50% |
-| FoamAgent 2.0.0 (25 loops) | gpt-5.4 | 45.45% | 75.00% |
-| FoamAgent 2.0.0 (25 loops) | gpt-5.3-codex | 54.55% | 62.50% |
-
-The highest reported scores in this table use **Anthropic Claude Opus 4.6**; model selection remains configurable.
-
-## Advanced Usage
-
-### Custom Mesh Files
-
-Foam-Agent supports external Gmsh `.msh` files (ASCII 2.2 format). Describe boundary conditions in your prompt and pass the mesh:
-
-```bash
-python foambench_main.py \
-  --output ./output \
-  --prompt_path ./user_req_tandem_wing.txt \
-  --custom_mesh_path ./tandem_wing.msh
-```
-
-To mount a mesh file from the host into Docker:
-
-```bash
-docker run -it \
-  -e FOAMAGENT_MODEL_PROVIDER=openai \
-  -e FOAMAGENT_MODEL_VERSION=gpt-5-mini \
-  -e OPENAI_API_KEY=your-key-here \
-  -v /path/to/my_mesh.msh:/home/openfoam/Foam-Agent/my_mesh.msh \
-  -p 7860:7860 \
-  leoyue123/foamagent
-```
-
-### Skill / MCP Integration (Claude Code, Cursor, Windsurf, etc.)
-
-Foam-Agent exposes its full CFD workflow as an **MCP server** — the universal protocol supported by Claude Code, Cursor, Windsurf, and other AI-powered tools. It also ships with a **Claude Code skill** (`/foam`) for one-command simulation runs.
-
-#### Quick Setup (Local Install)
-
-```bash
-# 1. Install (adds the foamagent-mcp command)
-pip install -e .
-
-# 2. Register with your AI tool
-claude mcp add foamagent -- foamagent-mcp                # Claude Code
-```
-
-For **Cursor**: open Settings > Features > MCP > Edit MCP Settings, and add:
-
-```json
-{
-  "mcpServers": {
-    "foamagent": {
-      "command": "foamagent-mcp"
-    }
-  }
-}
-```
-
-For **Windsurf / other MCP-compatible tools**, use the same JSON config above.
-
-#### Quick Setup (Docker)
-
-If running in Docker, start the HTTP server and point your MCP client at it:
-
-```bash
-docker run -it \
-  -e FOAMAGENT_MODEL_PROVIDER=openai \
-  -e FOAMAGENT_MODEL_VERSION=gpt-5-mini \
-  -e OPENAI_API_KEY=your-key-here \
-  -p 7860:7860 \
-  leoyue123/foamagent \
-  foamagent-mcp --transport http --host 0.0.0.0 --port 7860
-```
-
-Then configure your MCP client:
-
-```json
-{
-  "mcpServers": {
-    "foamagent": {
-      "url": "http://localhost:7860/mcp"
-    }
-  }
-}
-```
-
-> If running Docker on a remote server, ensure port 7860 is reachable (e.g., via SSH port forwarding or `-p 7860:7860`).
-
-#### Available MCP Tools
-
-Foundation OpenFOAM v10 is the default native target. Set
-`FOAMAGENT_OPENFOAM_TARGET=esi-v2006` to select the peer native ESI/OpenCFD v2006 target. Each native target uses its own tutorial/FAISS corpus, dictionary conventions, runtime guard, and Docker image.
-
-`FOAMAGENT_OPENFOAM_FORK=esi` is separate from native target selection: it is a legacy, best-effort Foundation-to-ESI translation compatibility path. It does not select v2006 and is never invoked by `FOAMAGENT_OPENFOAM_TARGET=esi-v2006`.
-
-### Native target capability parity
-
-`foundation-v10` and `esi-v2006` use the same workflow implementation for prompt planning and RAG, file and Allrun generation, standard/Gmsh/custom meshes, local and HPC execution, review/rewrite, visualization, and existing-case import, with target-specific Docker delivery. This is shared code coverage, not a guarantee that every solver or case succeeds. Their solver names and dictionary syntax remain release-native. Existing cases use conditional graph routes: Planner selects optional mesh preparation and file modification before running; Reviewer supplies file repair plans or mesh retries. `FOAMAGENT_OPENFOAM_FORK=esi` is a legacy translation
-mode.
-
-Native tutorial corpora are stored by target under `database/`: Foundation v10 uses `database/foundation-v10/{raw,faiss}`, while ESI/OpenCFD v2006 uses `database/esi-v2006/{raw,faiss}`. The sibling `database/script/` directory contains the parsers and FAISS builders shared by both corpora.
-
-| Tool | Description |
-|------|-------------|
-| `plan` | Analyze requirements and plan simulation structure using the selected native target's references |
-| `input_writer` | Generate OpenFOAM configuration files using the selected native conventions; legacy translation is available only through `FOAMAGENT_OPENFOAM_FORK=esi` |
-| `run` | Execute Allrun locally with error collection and validate the selected native runtime |
-| `review` | Analyze simulation errors and suggest fixes using the selected native target's references |
-| `apply_fixes` | Rewrite OpenFOAM files according to the selected native conventions |
-| `run_case` | Run or modify an existing directory/ZIP through the complete Planner-to-Reviewer workflow |
-| `visualization` | Generate PyVista visualization of simulation results |
-
-#### Claude Code Skill
-
-For Claude Code users who clone this repo, a `/foam` skill is included in `.claude/skills/foam.md`. It orchestrates the MCP tools into a complete workflow:
+## Layout
 
 ```
-/foam Simulate lid-driven cavity flow at Re=1000
+src/fds/            new: spec.py writer.py validate.py runner.py outparse.py criteria.py agent.py namelist.py target.py
+src/nodes/, src/*   Foam-Agent graph; one `if is_fds:` branch per node delegates to src/fds/agent.py
+firebench/          build_cases.py judge.py run.py report.py write_requirements.py, cases/, results/
+configs/            thresholds_fr_default.yaml (with sources), nist_model_uncertainty.yaml (Validation Guide Table 16.1)
+app/                Streamlit demo
+database/fds-6.11/  retrieval corpus (NIST validation inputs) and FAISS indices
+tests/unit/         writer / validate / criteria / judge / patch tests
 ```
 
-This triggers the full pipeline: plan -> generate files -> run -> review/fix loop -> visualize.
+## Roadmap
 
-This skill orchestrates individual MCP tools on the client, with up to five repair iterations and optional visualization. Those tools do not run the CLI's complete graph automatically; the standalone `run` tool is local-only. Use the CLI graph for generated-case Gmsh/custom-mesh or HPC routing, and `run_case` for the imported-case graph.
+1. Held-out FireBench (exclude the case's own directory from retrieval); run the remaining cases on a workstation.
+2. Report module: Smokeview figures, curves and a French DOCX following the four regulatory questions.
+3. Local-model line (Devstral / Qwen) for offices that cannot send briefs to an API.
+4. Threshold review with practising fire-safety engineers; Docker image.
 
-### Codex OAuth Sign-in (No API Key)
+## Licensing and attribution
 
-If you have a ChatGPT/Codex subscription, you can authenticate via OAuth instead of an API key:
+- Foam-Agent: MIT, Copyright (c) 2025 Ling Yue — the LangGraph agent, LLM service, retrieval layout and OpenFOAM code in this repository. The original README is kept as `README.foam-agent.md`.
+- SmokeAgent additions (`src/fds/`, `firebench/`, `configs/`, `app/`, `database/fds-6.11/`, this README): MIT, Copyright (c) 2026 XIAO Hao.
+- FDS and Smokeview: NIST, public domain. NIST validation inputs and experimental data (`firemodels/fds`, `firemodels/exp`): public domain. Wall material properties: NBSIR 88-3752 as transcribed in the NIST FDS validation inputs. Uncertainty statistics: FDS Validation Guide 6.11.1, Table 16.1.
 
-1. Install the [Codex CLI](https://github.com/openai/codex) on your host machine.
-2. Run `codex login` and choose **"Sign in with ChatGPT"**.
-3. Verify the token cache exists: `ls ~/.codex/auth.json`
-4. Mount it into the container:
-
-```bash
-docker run -it \
-  -e FOAMAGENT_MODEL_PROVIDER=openai-codex \
-  -e FOAMAGENT_MODEL_VERSION=gpt-5.3-codex \
-  -v ~/.codex/auth.json:/root/.codex/auth.json:ro \
-  -p 7860:7860 \
-  leoyue123/foamagent
-```
-
-Foam-Agent searches for OAuth tokens at (first match wins):
-- `$CODEX_HOME/auth.json`
-- `~/.codex/auth.json`
-- `~/.clawdbot/agents/main/agent/auth-profiles.json`
-
-> Security note: `auth.json` contains access tokens. Treat it like a password.
-
-### Manual Installation (Without Docker)
-
-```bash
-git clone https://github.com/csml-rpi/Foam-Agent.git
-cd Foam-Agent
-conda env create -n FoamAgent -f environment.yml
-conda activate FoamAgent
-```
-
-For the default native target, install and source **Foundation OpenFOAM v10** ([openfoam.org](https://openfoam.org)). For native ESI/OpenCFD v2006, install and source its matching v2006 runtime and select `FOAMAGENT_OPENFOAM_TARGET=esi-v2006` as described below. `FOAMAGENT_OPENFOAM_FORK=esi` remains the separate best-effort translation mode. Follow the [official Foundation v10 installation guide](https://openfoam.org/version/10/) for the default path and verify with:
-
-```bash
-echo $WM_PROJECT_DIR   # should print e.g. /opt/openfoam10
-```
-
-Then run:
-
-```bash
-python foambench_main.py --output ./output --prompt_path ./user_requirement.txt
-```
-
-### Native ESI/OpenCFD v2006
-
-Build the isolated ESI v2006 corpus from an ESI v2006 installation, then select the target explicitly. Existing configurations remain unchanged unless this target is supplied.
-
-```bash
-# Maintainers: rebuild the versioned v2006 corpus from a sourced ESI/OpenCFD
-# v2006 installation. Regular users receive this corpus through Git LFS.
-python init_database.py --openfoam_target esi-v2006 \
-  --openfoam_path "$WM_PROJECT_DIR" \
-  --embedding_provider huggingface --embedding_model Qwen/Qwen3-Embedding-0.6B --force
-# If a packaged v2006 runtime omits tutorials, point at tutorials extracted
-# from the matching official OpenFOAM-v2006 source archive:
-#   --tutorials_path /path/to/OpenFOAM-v2006/tutorials
-
-# Users: clone with Git LFS, then run the selected native target.
-git lfs pull
-python foambench_main.py --openfoam_target esi-v2006 \
-  --output ./output/esi-v2006 --prompt_path ./user_requirement.txt
-```
-
-The explicit embedding arguments above build Qwen3-Embedding-0.6B indices, matching the runtime default. Without those arguments, `init_database.py` checks completeness under Qwen 0.6B, but invokes FAISS builders whose defaults are OpenAI/`text-embedding-3-small`. Always supply both arguments; the runtime embedding environment variables do not set the builders' CLI defaults. Omit `--force` to reuse existing raw data and complete selected-model indices. Use `--embedding_provider huggingface --embedding_model Qwen/Qwen3-Embedding-8B` for 8B, or `--embedding_provider openai --embedding_model text-embedding-3-small` for OpenAI. Set the corresponding runtime embedding provider/model when using those indices.
-
-The current Foundation corpus has Qwen 0.6B, Qwen 8B, and OpenAI small index directories; the ESI v2006 corpus has Qwen 0.6B and OpenAI small, but no prebuilt Qwen 8B directory. `init_database.py --database_path` takes a target-specific directory; `Config.database_path` instead takes the parent containing both target directories.
-
-`WM_PROJECT_VERSION` must report `v2006` (or `2006`) at execution time. Building the OpenAI index requires `OPENAI_API_KEY`. Both targets use their own subdirectory under the configured database root and check the corpus manifest, required raw files, and selected embedding indices before loading. HPC jobs use the existing OpenFOAM environment on the compute nodes and check that its version matches the selected target.
-
-### HPC execution and monitoring
-
-The HPC node generates a Slurm script and invokes `sbatch` and `squeue` in the agent's environment. The case path must be accessible to the compute nodes; this code does not upload files or establish an SSH connection. The selected OpenFOAM environment must already be available when the job's runtime guard executes.
-
-Current monitoring treats an empty `squeue` response as `COMPLETED`, then checks case logs. It does not query `sacct` or validate a Slurm exit code. The wait defaults to 3600 seconds with 30-second polling; timeout returns the last observed state, which may enter the existing Reviewer/repair/resubmission loop even while the original job remains active. Job disappearance is therefore not independent confirmation of successful execution.
-
-### Building the Docker Image from Source
-
-```bash
-git clone https://github.com/csml-rpi/Foam-Agent.git
-cd Foam-Agent
-docker build -f docker/Dockerfile -t foamagent:foundation-v10 .
-docker run -it \
-  -e FOAMAGENT_MODEL_PROVIDER=openai \
-  -e FOAMAGENT_MODEL_VERSION=gpt-5-mini \
-  -e OPENAI_API_KEY=your-key-here \
-  -p 7860:7860 \
-  foamagent:foundation-v10
-```
-
-The ESI v2006 image requires the versioned `database/esi-v2006/` corpus in the build context. Its Docker build validates that all Git LFS assets are hydrated.
-
-Both images use `/home/openfoam/Foam-Agent`, the same Conda environment setup, and the same startup update policy. ESI v2006 retains a separate source-compilation stage on Ubuntu 20.04; its entrypoint handles the v2006 environment initialization before activating Conda. Both entrypoints update from `csml-rpi/Foam-Agent` by default. Set `FOAMAGENT_SKIP_UPDATE=1` to run the code bundled in the image (including local changes).
-
-```bash
-docker build -f docker/Dockerfile.esi-v2006 -t foamagent:esi-v2006 .
-docker run -it foamagent:esi-v2006
-```
-
-## Troubleshooting
-
-| Problem | Solution |
-|---|---|
-| OpenFOAM environment not found | Ensure the intended OpenFOAM bashrc is sourced. The default path is Foundation v10; `FOAMAGENT_OPENFOAM_TARGET=esi-v2006` requires an ESI v2006 environment at runtime |
-| Database files missing | Ensure the full repo is cloned including `database/`. Native ESI also needs `database/esi-v2006/` built from v2006 tutorials |
-| Missing dependencies | `conda env update -n FoamAgent -f environment.yml --prune` |
-| API key errors | Ensure the appropriate key is set (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.) |
-| MCP connection errors | Verify the container is running and port 7860 is accessible |
-
-> **OpenFOAM version:** Foam-Agent targets **Foundation OpenFOAM v10** ([openfoam.org](https://openfoam.org)) by default. `FOAMAGENT_OPENFOAM_FORK=esi` retains the legacy best-effort ESI translation path. `FOAMAGENT_OPENFOAM_TARGET=esi-v2006` selects the separate native ESI/OpenCFD v2006 path. Build `foamagent:foundation-v10` or `foamagent:esi-v2006` for the matching runtime; one image cannot switch OpenFOAM distributions at launch.
-
-## Community
-
-### Join the WeChat community
-
-Chinese-speaking users can join the Foam-Agent WeChat community by adding the volunteer's WeChat account: **ZDSJTUCFD**. The volunteer will invite you to the group.
-
-## Citation
-If you use Foam-Agent in your research, please cite our paper:
-```bibtex
-@article{yue2025foam,
-    title = {Foam-Agent: A large language model-based multi-agent framework for automating computational fluid dynamics workflows},
-    journal = {Computer Methods in Applied Mechanics and Engineering},
-    volume = {461},
-    pages = {119271},
-    year = {2026},
-    issn = {0045-7825},
-    author = {Ling Yue and Nithin Somasekharan and Tingwen Zhang and Yadi Cao and Zhangze Chen and Shimin Di and Shaowu Pan}
-}
-
-```
+If you work on performance-based smoke-control studies in France and want to try this on a real brief, open an issue.

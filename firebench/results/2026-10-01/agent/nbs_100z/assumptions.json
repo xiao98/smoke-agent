@@ -1,0 +1,12 @@
+[
+  "Fire source = top face of burner (10.9-11.2 x 0-0.3 m at z = 0.5 m), area 0.09 m2, HRRPUA = 1222 kW/m2 (within 250-2500).",
+  "HRR curve transcribed as [[0,0],[1,110],[900,110],[901,0]]: 1 s ramp, constant 110 kW, extinction 900-901 s; growth='constant' with time_to_peak_s=1 for consistency.",
+  "Fuel left at schema default (polyurethane-like, soot 0.1, CO 0.04) since no fuel was specified; the NIST reference uses methane with soot yield 0.01, which would give less smoke.",
+  "Building default material = calcium_silicate_on_gypsum (corridor), as stated.",
+  "Fire-room block boundaries and its internal obstructions (lowered ceiling, solid block, lintel, door wall) set to ceramic_fiber 50 mm; floor of fire room also ceramic fiber per request (reference used fire brick).",
+  "Room 3 block uses the default wall material; the concrete floor cannot be assigned separately via block_materials, so the floor uses the default material - a limitation.",
+  "Solid blocks outside the computed volume and room 3 solid block/transom use the default material.",
+  "Burner obstruction material = steel 5 mm (pan).",
+  "No mechanical exhaust or make-up air; the only opening is the corridor end door at x = 0.",
+  "Output intervals left at defaults: DEVC 1 s, SLCF 5 s; ambient conditions are the solver defaults."
+]

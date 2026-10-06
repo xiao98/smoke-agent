@@ -1,0 +1,284 @@
+{
+  "chid": "nbs_100z_multiroom",
+  "title": "Essai multipièces NBS 100Z - brûleur 110 kW, couloir et pièce 3",
+  "building": {
+    "domain": {
+      "x": [
+        0.0,
+        12.2
+      ],
+      "y": [
+        0.0,
+        5.8
+      ],
+      "z": [
+        0.0,
+        2.4
+      ]
+    },
+    "wall_material": "calcium_silicate_on_gypsum",
+    "obstructions": [
+      {
+        "id": "bloc_plein_ouest",
+        "xb": [
+          0.0,
+          2.4,
+          0.0,
+          3.4,
+          0.0,
+          2.4
+        ],
+        "surf_id": "INERT",
+        "material": null,
+        "holes": []
+      },
+      {
+        "id": "bloc_plein_centre",
+        "xb": [
+          4.6,
+          9.8,
+          0.0,
+          3.4,
+          0.0,
+          2.4
+        ],
+        "surf_id": "INERT",
+        "material": null,
+        "holes": []
+      },
+      {
+        "id": "plafond_surbaisse_piece_feu",
+        "xb": [
+          9.8,
+          12.2,
+          0.0,
+          3.4,
+          2.2,
+          2.4
+        ],
+        "surf_id": "INERT",
+        "material": "ceramic_fiber",
+        "holes": []
+      },
+      {
+        "id": "bloc_plein_piece_feu",
+        "xb": [
+          9.8,
+          11.1,
+          2.3,
+          3.4,
+          0.0,
+          2.2
+        ],
+        "surf_id": "INERT",
+        "material": "ceramic_fiber",
+        "holes": []
+      },
+      {
+        "id": "linteau_piece_feu",
+        "xb": [
+          11.1,
+          12.2,
+          2.3,
+          3.4,
+          2.0,
+          2.2
+        ],
+        "surf_id": "INERT",
+        "material": "ceramic_fiber",
+        "holes": []
+      },
+      {
+        "id": "mur_porte_piece_feu",
+        "xb": [
+          11.1,
+          12.2,
+          3.3,
+          3.4,
+          0.0,
+          2.2
+        ],
+        "surf_id": "INERT",
+        "material": "ceramic_fiber",
+        "holes": [
+          {
+            "xb": [
+              11.2,
+              12.0,
+              3.3,
+              3.4,
+              0.0,
+              1.6
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bloc_plein_piece3",
+        "xb": [
+          3.2,
+          4.6,
+          2.2,
+          3.4,
+          0.0,
+          2.4
+        ],
+        "surf_id": "INERT",
+        "material": null,
+        "holes": []
+      },
+      {
+        "id": "imposte_piece3",
+        "xb": [
+          2.4,
+          3.2,
+          3.3,
+          3.4,
+          2.0,
+          2.4
+        ],
+        "surf_id": "INERT",
+        "material": null,
+        "holes": []
+      },
+      {
+        "id": "bruleur",
+        "xb": [
+          10.9,
+          11.2,
+          0.0,
+          0.3,
+          0.4,
+          0.5
+        ],
+        "surf_id": "INERT",
+        "material": "steel",
+        "holes": []
+      }
+    ],
+    "openings": [
+      {
+        "id": "porte_bout_couloir",
+        "xb": [
+          0.0,
+          0.0,
+          4.2,
+          5.0,
+          0.0,
+          2.0
+        ],
+        "type": "open"
+      }
+    ]
+  },
+  "fire": {
+    "location_xb": [
+      10.9,
+      11.2,
+      0.0,
+      0.3,
+      0.5,
+      0.5
+    ],
+    "hrr_peak_kw": 110.0,
+    "growth": "constant",
+    "time_to_peak_s": 1.0,
+    "hrr_curve": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        110.0
+      ],
+      [
+        900.0,
+        110.0
+      ],
+      [
+        901.0,
+        0.0
+      ]
+    ],
+    "fuel": {
+      "name": "POLYURETHANE",
+      "soot_yield": 0.1,
+      "co_yield": 0.04,
+      "heat_of_combustion": 25000.0,
+      "c": 1.0,
+      "h": 1.75,
+      "o": 0.25,
+      "n": 0.065
+    }
+  },
+  "smoke_control": {
+    "exhaust": [],
+    "makeup": [],
+    "curtains": []
+  },
+  "escape_paths": [
+    {
+      "id": "piece3_vers_sortie",
+      "polyline": [
+        [
+          2.8,
+          1.5,
+          1.8
+        ],
+        [
+          2.8,
+          4.6,
+          1.8
+        ],
+        [
+          0.2,
+          4.6,
+          1.8
+        ]
+      ],
+      "rset_s": 120.0
+    }
+  ],
+  "mesh": {
+    "cell_size": 0.1,
+    "max_cells_per_mesh": 1000000,
+    "blocks": [
+      [
+        9.8,
+        12.2,
+        0.0,
+        3.4,
+        0.0,
+        2.2
+      ],
+      [
+        2.4,
+        4.6,
+        0.0,
+        3.4,
+        0.0,
+        2.4
+      ],
+      [
+        0.0,
+        12.2,
+        3.4,
+        5.8,
+        0.0,
+        2.4
+      ]
+    ],
+    "block_materials": [
+      "ceramic_fiber",
+      null,
+      null
+    ]
+  },
+  "sim": {
+    "t_end_s": 950.0,
+    "dt_devc_s": 1.0,
+    "dt_slcf_s": 5.0
+  },
+  "thresholds_profile": "fr_default"
+}

@@ -1,0 +1,158 @@
+{
+  "chid": "steckler_10",
+  "title": "Steckler test 10 - methane burner 62.9 kW, narrow door",
+  "building": {
+    "domain": {
+      "x": [
+        0.0,
+        3.6
+      ],
+      "y": [
+        -1.4,
+        1.4
+      ],
+      "z": [
+        0.0,
+        2.13
+      ]
+    },
+    "obstructions": [
+      {
+        "id": "front_wall",
+        "xb": [
+          2.8,
+          2.9,
+          -1.4,
+          1.4,
+          0.0,
+          2.13
+        ],
+        "surf_id": "INERT",
+        "holes": [
+          {
+            "xb": [
+              2.75,
+              2.95,
+              -0.1,
+              0.15,
+              0.0,
+              1.83
+            ]
+          }
+        ]
+      }
+    ],
+    "openings": [
+      {
+        "id": "open_xmax",
+        "xb": [
+          3.6,
+          3.6,
+          -1.4,
+          1.4,
+          0.0,
+          2.13
+        ],
+        "type": "open"
+      },
+      {
+        "id": "open_ymin",
+        "xb": [
+          2.9,
+          3.6,
+          -1.4,
+          -1.4,
+          0.0,
+          2.13
+        ],
+        "type": "open"
+      },
+      {
+        "id": "open_ymax",
+        "xb": [
+          2.9,
+          3.6,
+          1.4,
+          1.4,
+          0.0,
+          2.13
+        ],
+        "type": "open"
+      },
+      {
+        "id": "open_top",
+        "xb": [
+          2.9,
+          3.6,
+          -1.4,
+          1.4,
+          2.13,
+          2.13
+        ],
+        "type": "open"
+      }
+    ]
+  },
+  "fire": {
+    "location_xb": [
+      1.28,
+      1.52,
+      -0.125,
+      0.125,
+      0.0,
+      0.0
+    ],
+    "hrr_peak_kw": 62.9,
+    "growth": "constant",
+    "time_to_peak_s": null,
+    "hrr_curve": null,
+    "fuel": {
+      "name": "METHANE",
+      "soot_yield": 0.001,
+      "co_yield": 0.0,
+      "heat_of_combustion": 50000.0,
+      "c": 1.0,
+      "h": 4.0,
+      "o": 0.0,
+      "n": 0.0
+    }
+  },
+  "smoke_control": {
+    "exhaust": [],
+    "makeup": [],
+    "curtains": []
+  },
+  "escape_paths": [
+    {
+      "id": "room_to_outside",
+      "polyline": [
+        [
+          0.5,
+          1.0,
+          1.8
+        ],
+        [
+          2.5,
+          0.0,
+          1.8
+        ],
+        [
+          3.3,
+          0.0,
+          1.8
+        ]
+      ],
+      "rset_s": 120.0
+    }
+  ],
+  "mesh": {
+    "cell_size": 0.05,
+    "max_cells_per_mesh": 1000000
+  },
+  "sim": {
+    "t_end_s": 400.0,
+    "dt_devc_s": 1.0,
+    "dt_slcf_s": 5.0
+  },
+  "thresholds_profile": "fr_default"
+}

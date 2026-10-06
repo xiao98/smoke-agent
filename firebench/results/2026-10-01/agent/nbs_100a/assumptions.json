@@ -1,0 +1,11 @@
+[
+  "Burner surface 0.3 m x 0.3 m = 0.09 m2 at z = 0.5 m, so HRRPUA = 110/0.09 ≈ 1222 kW/m2. This is within 250–2500 and matches the NBS reference.",
+  "HRR curve: 0 → 110 kW in 1 s, held until 900 s, then extinguished at 901 s. The hrr_curve takes precedence over growth/time_to_peak_s.",
+  "Methane fuel CH4: heat of combustion 50,000 kJ/kg, soot yield 0.005 (as in the NBS reference) and CO yield 0 (FDS default, clean gas burner).",
+  "The burner pedestal is modelled in steel (pan), like the reference case.",
+  "The partition wall, its door, the solid block, the access-corridor ceiling and the slab above the fire room are in ceramic fibre (fire-room envelope). The rest uses the building default material: calcium silicate on plasterboard.",
+  "The fire-room floor is in ceramic fibre as requested (the original test used refractory brick).",
+  "The fill block for the unused zone has the default material. It lies outside the computed meshes, so it has no thermal effect.",
+  "Device output every 1 s and slice output every 5 s (spec defaults); default French thresholds profile (fr_default).",
+  "No mechanical extraction and no make-up air: natural ventilation only, through the door at the end of the corridor."
+]

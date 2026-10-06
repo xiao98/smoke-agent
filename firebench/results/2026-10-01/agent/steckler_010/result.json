@@ -1,0 +1,50 @@
+{
+  "case": "steckler_010",
+  "chid": "steckler_10",
+  "mode": "agent",
+  "passed": true,
+  "gates": [
+    {
+      "name": "init",
+      "passed": true,
+      "detail": "fds+smv present",
+      "items": []
+    },
+    {
+      "name": "run",
+      "passed": true,
+      "detail": "completed=True errors=0 hrr_sim=63 hrr_expected=63 tol=10% stat=plateau_median starved=0%",
+      "items": []
+    },
+    {
+      "name": "experiment",
+      "passed": true,
+      "detail": "1/1 references within tolerance (NIST 2-sigma band / official ceiling)",
+      "items": [
+        {
+          "fds_col": "HGL Height",
+          "quantity": "hgl_depth",
+          "metric": "mean",
+          "exp": -1.65,
+          "fds": -1.75,
+          "rel_err": 0.058,
+          "tol": 0.467,
+          "nist_z": 0.2,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": 0.112,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "criteria",
+      "passed": true,
+      "detail": "recomputed ASET matches stored criteria.json",
+      "items": []
+    }
+  ],
+  "run_tag": "2026-10-01",
+  "bundle": "firebench/runs/2026-10-01/agent/steckler_010"
+}

@@ -1,0 +1,223 @@
+{
+  "chid": "ul_nist_vent_test_2",
+  "title": "Essai de desenfumage NIST/UL n2 - exutoire ouvert, bruleur methane 2144 kW",
+  "building": {
+    "domain": {
+      "x": [
+        0.0,
+        6.1
+      ],
+      "y": [
+        -1.1,
+        4.3
+      ],
+      "z": [
+        0.0,
+        4.0
+      ]
+    },
+    "obstructions": [
+      {
+        "id": "facade_wall",
+        "xb": [
+          0.0,
+          6.1,
+          -0.1,
+          0.0,
+          0.0,
+          2.4
+        ],
+        "surf_id": "INERT",
+        "holes": [
+          {
+            "xb": [
+              4.3,
+              5.2,
+              -0.2,
+              0.1,
+              0.0,
+              2.1
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ceiling_slab",
+        "xb": [
+          0.0,
+          6.1,
+          -0.1,
+          4.3,
+          2.4,
+          2.5
+        ],
+        "surf_id": "INERT",
+        "holes": [
+          {
+            "xb": [
+              1.8,
+              4.2,
+              1.5,
+              2.7,
+              2.3,
+              2.6
+            ]
+          }
+        ]
+      },
+      {
+        "id": "soffit_xmin",
+        "xb": [
+          1.7,
+          1.8,
+          1.4,
+          2.8,
+          2.5,
+          3.0
+        ],
+        "surf_id": "INERT",
+        "holes": []
+      },
+      {
+        "id": "soffit_xmax",
+        "xb": [
+          4.2,
+          4.3,
+          1.4,
+          2.8,
+          2.5,
+          3.0
+        ],
+        "surf_id": "INERT",
+        "holes": []
+      },
+      {
+        "id": "soffit_ymin",
+        "xb": [
+          1.8,
+          4.2,
+          1.4,
+          1.5,
+          2.5,
+          3.0
+        ],
+        "surf_id": "INERT",
+        "holes": []
+      },
+      {
+        "id": "soffit_ymax",
+        "xb": [
+          1.8,
+          4.2,
+          2.7,
+          2.8,
+          2.5,
+          3.0
+        ],
+        "surf_id": "INERT",
+        "holes": []
+      },
+      {
+        "id": "burner_block",
+        "xb": [
+          0.0,
+          0.95,
+          3.35,
+          4.3,
+          0.0,
+          0.4
+        ],
+        "surf_id": "INERT",
+        "holes": []
+      }
+    ],
+    "openings": [
+      {
+        "id": "open_ymin",
+        "xb": [
+          0.0,
+          6.1,
+          -1.1,
+          -1.1,
+          0.0,
+          4.0
+        ],
+        "type": "open"
+      },
+      {
+        "id": "open_zmax",
+        "xb": [
+          0.0,
+          6.1,
+          -1.1,
+          4.3,
+          4.0,
+          4.0
+        ],
+        "type": "open"
+      }
+    ]
+  },
+  "fire": {
+    "location_xb": [
+      0.0,
+      0.95,
+      3.35,
+      4.3,
+      0.4,
+      0.4
+    ],
+    "hrr_peak_kw": 2144.0,
+    "growth": "constant",
+    "time_to_peak_s": 10.0,
+    "hrr_curve": null,
+    "fuel": {
+      "name": "METHANE",
+      "soot_yield": 0.001,
+      "co_yield": 0.0,
+      "heat_of_combustion": 50000.0,
+      "c": 1.0,
+      "h": 4.0,
+      "o": 0.0,
+      "n": 0.0
+    }
+  },
+  "smoke_control": {
+    "exhaust": [],
+    "makeup": [],
+    "curtains": []
+  },
+  "escape_paths": [
+    {
+      "id": "path_door",
+      "polyline": [
+        [
+          1.0,
+          2.0,
+          1.8
+        ],
+        [
+          4.75,
+          0.5,
+          1.8
+        ],
+        [
+          4.75,
+          -0.8,
+          1.8
+        ]
+      ],
+      "rset_s": 120.0
+    }
+  ],
+  "mesh": {
+    "cell_size": 0.15,
+    "max_cells_per_mesh": 1000000
+  },
+  "sim": {
+    "t_end_s": 950.0,
+    "dt_devc_s": 1.0,
+    "dt_slcf_s": 5.0
+  },
+  "thresholds_profile": "fr_default"
+}

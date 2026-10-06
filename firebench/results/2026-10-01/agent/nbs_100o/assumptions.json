@@ -1,0 +1,9 @@
+[
+  "Burner area 0.3 x 0.3 m = 0.09 m2, so HRRPUA = 110/0.09 ≈ 1222 kW/m2, which is inside the 250–2500 range.",
+  "HRR curve transcribed as 0 kW at 0 s, 110 kW at 1 s, 110 kW at 900 s, then 0 kW at 901 s (extinction).",
+  "Methane fuel taken as CH4 with heat of combustion 50 000 kJ/kg, soot yield 0.01 (as in the NBS reference) and CO yield 0 (clean gas burner).",
+  "Burner block (z 0.4–0.5) modelled in 5 mm steel, the conventional burner/pan surface.",
+  "The solid volume above the fire room and the room's internal obstructions (cut-out block, soffit, room/corridor wall) use 50 mm ceramic fibre, the fire-room material. The solid fill outside the mesh uses the building default material.",
+  "Fire-room mesh block gets ceramic fibre for its walls, ceiling and floor. Corridor block uses the building default material (13 mm calcium silicate on 13 mm gypsum).",
+  "Device output every 1 s and slice output every 5 s (defaults). Ambient conditions are the solver defaults."
+]

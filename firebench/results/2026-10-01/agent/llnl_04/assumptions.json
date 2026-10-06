@@ -1,0 +1,12 @@
+[
+  "Design fire transcribed as a linear ramp 0 -> 300 kW over 0-30 s, then constant to 600 s (hrr_curve). growth='ultrafast' and time_to_peak_s=30 are also set; hrr_curve takes precedence.",
+  "Fire surface is the top face of the burner block at z = 0.2 m: 0.5 x 0.4 = 0.2 m2, so HRRPUA = 1500 kW/m2.",
+  "Fuel is methane (CH4: C=1, H=4, O=0, N=0) with heat of combustion 50 000 kJ/kg, CO yield 0 and a nominal soot yield of 0.001 (the schema requires a value above 0).",
+  "Burner and inlet-duct obstructions use INERT surfaces. The official steel, aluminium-silicate and Marinite linings are not modelled.",
+  "The passive inlet duct is a permanent OPEN vent on the y = 0 wall (x 0.7-1.0, z 0.6-0.9). The HVAC duct losses from the official input are not modelled. This vent sits against the end of the horizontal duct obstruction, so its effective flow should be checked.",
+  "The EXHAUST vent, the drop ceiling and the door are not modelled. The door stays closed and envelope leakage is ignored, as requested.",
+  "Uniform mesh of 0.15 m (40 x 27 x 30 cells), simulated from 0 to 600 s with no pre-ignition period (official T_BEGIN = -60 s ignored).",
+  "Ambient conditions are left at FDS defaults (official TMPA = 21 C and P_INF = 99 300 Pa are not carried over).",
+  "Device output every 1 s and slice output every 5 s (defaults).",
+  "The evacuation path ends at the door location at (4.8 ; 0.3 ; 1.8) even though the door is closed in this test. RSET = 120 s."
+]

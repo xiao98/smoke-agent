@@ -1,0 +1,65 @@
+{
+  "case": "llnl_03",
+  "chid": "LLNL_03",
+  "mode": "official",
+  "passed": true,
+  "gates": [
+    {
+      "name": "init",
+      "passed": true,
+      "detail": "fds+smv present",
+      "items": []
+    },
+    {
+      "name": "run",
+      "passed": true,
+      "detail": "completed=True errors=0",
+      "items": []
+    },
+    {
+      "name": "experiment",
+      "passed": true,
+      "detail": "2/2 references within tolerance (NIST 2-sigma band)",
+      "items": [
+        {
+          "fds_col": "West_Upper_TCs",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 184.0,
+          "fds": 201.0,
+          "rel_err": 0.092,
+          "tol": 0.369,
+          "nist_z": 0.02,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.114,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        },
+        {
+          "fds_col": "West_Middle_TCs",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 148.0,
+          "fds": 190.4,
+          "rel_err": 0.286,
+          "tol": 0.369,
+          "nist_z": 1.45,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.114,
+          "basis": "nist",
+          "official_rel_err": null,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "criteria",
+      "passed": true,
+      "detail": "official input: no spec, gate skipped",
+      "items": []
+    }
+  ],
+  "run_tag": "2026-10-01",
+  "bundle": "firebench/runs/2026-10-01/official/llnl_03"
+}

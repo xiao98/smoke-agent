@@ -1,0 +1,155 @@
+{
+  "case": "nbs_100z",
+  "chid": "nbs_100z_multiroom",
+  "mode": "agent",
+  "passed": true,
+  "gates": [
+    {
+      "name": "init",
+      "passed": true,
+      "detail": "fds+smv present",
+      "items": []
+    },
+    {
+      "name": "run",
+      "passed": true,
+      "detail": "completed=True errors=0 hrr_sim=110 hrr_expected=110 tol=10% stat=plateau_median starved=0%",
+      "items": []
+    },
+    {
+      "name": "experiment",
+      "passed": true,
+      "detail": "8/8 references within tolerance (NIST 2-sigma band / official ceiling)",
+      "items": [
+        {
+          "fds_col": "Layer Temp 1",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 287.67,
+          "fds": 285.08,
+          "rel_err": 0.009,
+          "tol": 0.366,
+          "nist_z": 0.63,
+          "nist_bias": 1.07,
+          "nist_sigma": 0.122,
+          "basis": "nist",
+          "official_rel_err": 0.082,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Temp 3",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 76.51,
+          "fds": 83.86,
+          "rel_err": 0.096,
+          "tol": 0.366,
+          "nist_z": 0.2,
+          "nist_bias": 1.07,
+          "nist_sigma": 0.122,
+          "basis": "nist",
+          "official_rel_err": 0.053,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Temp 5",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 69.64,
+          "fds": 74.42,
+          "rel_err": 0.069,
+          "tol": 0.366,
+          "nist_z": 0.01,
+          "nist_bias": 1.07,
+          "nist_sigma": 0.122,
+          "basis": "nist",
+          "official_rel_err": 0.045,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Temp 8",
+          "quantity": "hgl_temperature",
+          "metric": "max",
+          "exp": 38.59,
+          "fds": 42.66,
+          "rel_err": 0.105,
+          "tol": 0.366,
+          "nist_z": 0.27,
+          "nist_bias": 1.07,
+          "nist_sigma": 0.122,
+          "basis": "nist",
+          "official_rel_err": 0.144,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Height 1",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.58,
+          "fds": -1.48,
+          "rel_err": 0.06,
+          "tol": 0.467,
+          "nist_z": 1.0,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": 0.075,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Height 3",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.16,
+          "fds": -1.24,
+          "rel_err": 0.068,
+          "tol": 0.467,
+          "nist_z": 0.14,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": 0.009,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Height 5",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.17,
+          "fds": -1.6,
+          "rel_err": 0.37,
+          "tol": 0.467,
+          "nist_z": 1.54,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": 0.242,
+          "ok": true
+        },
+        {
+          "fds_col": "Layer Height 8",
+          "quantity": "hgl_depth",
+          "metric": "min",
+          "exp": -1.38,
+          "fds": -1.69,
+          "rel_err": 0.228,
+          "tol": 0.467,
+          "nist_z": 0.8,
+          "nist_bias": 1.09,
+          "nist_sigma": 0.149,
+          "basis": "nist",
+          "official_rel_err": 0.16,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "criteria",
+      "passed": true,
+      "detail": "recomputed ASET matches stored criteria.json",
+      "items": []
+    }
+  ],
+  "run_tag": "2026-10-01",
+  "bundle": "firebench/runs/2026-10-01/agent/nbs_100z"
+}

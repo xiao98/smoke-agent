@@ -1,0 +1,13 @@
+[
+  "Source du feu : face supérieure du brûleur (z = 0,2 m), 0,5 × 0,4 = 0,2 m² ; 400 kW donnent un HRRPUA de 2000 kW/m², dans l'intervalle 250–2500 kW/m².",
+  "Montée en puissance : croissance « ultrafast » avec time_to_peak_s = 30 s pour atteindre 400 kW à 30 s, puis palier constant jusqu'à 500 s. La phase de pré-calcul de -60 s du cas de validation n'est pas reproduite.",
+  "Combustible : méthane (CH4), chaleur de combustion de 50 000 kJ/kg (valeur standard), taux de CO de 0 et taux de suies de 0,001 (combustion gazeuse propre ; le schéma exige une valeur > 0).",
+  "Les surfaces sont inertes (INERT, par défaut). Les parois en silicate d'aluminium, le Marinite, l'acier de la gaine et le faux plafond troué du cas NIST ne sont pas modélisés.",
+  "Gaine d'admission : deux blocs solides selon les coordonnées données. Le nœud HVAC (diamètre 0,30 m, pertes de charge 24,9) est remplacé par l'ouverture permanente 'INLET_OPENING' de 0,3 × 0,3 m sur la paroi y = 0 (x 0,7–1,0 ; z 0,6–0,9), comme demandé. Cette ouverture coïncide avec l'extrémité du bloc INLET_DUCT_1 : il faudra peut-être percer un trou dans ce bloc pour que l'air passe réellement.",
+  "Les fuites d'environ 0,0033 m² ne sont pas modélisées à part : la petite ouverture permanente les représente aussi.",
+  "La bouche d'extraction sur la paroi x = 6 (y 1,6–2,4 ; z 3,3–3,9) n'a aucun débit dans l'entrée officielle. Elle est donc omise : pas d'extraction mécanique ni d'air neuf associé.",
+  "La porte (x 4,4–5,2 sur y = 0) est fermée et n'est pas modélisée comme une ouverture. Le chemin d'évacuation se termine à l'emplacement de la porte.",
+  "Maillage uniforme de 0,15 m (40 × 27 × 30 cellules, environ 32 400 cellules, une seule maille). Durée de simulation : 500 s.",
+  "Pas de sortie des capteurs (dt_devc_s) : 1 s. Pas de sortie des coupes (dt_slcf_s) : 5 s (valeurs par défaut).",
+  "Température ambiante et pression : valeurs par défaut du solveur. Le cas NIST utilise TMPA = 33 °C et P_INF = 99 300 Pa, valeurs non reprises ici."
+]

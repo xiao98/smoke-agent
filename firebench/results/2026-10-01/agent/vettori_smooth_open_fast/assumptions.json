@@ -1,0 +1,10 @@
+[
+  "hrr_curve copied from the official tabulated ramp (absolute kW). hrr_peak_kw = curve maximum, 1053 kW (the request says about 1055 kW). time_to_peak_s = 100 s. growth='fast' is only a label: the curve overrides it.",
+  "The requested burner (0.60 x 0.60 m = 0.36 m2) would give an HRRPUA of about 2930 kW/m2, above the 2500 kW/m2 limit. The burner was extended in y from 1.60 to 1.75 m (0.60 x 0.75 = 0.45 m2), giving about 2340 kW/m2. It stays on top of the support block at z = 0.30 m.",
+  "Fuel: methane (CH4, C=1, H=4, O=0, N=0). Heat of combustion 50000 kJ/kg. Soot yield 0.001 (the minimum that is not zero). CO yield 0.",
+  "The ceiling opening was moved from z = 2.64 m (official input) to the domain ceiling at z = 2.44 m, as the request asks. All other domain boundaries are closed walls.",
+  "The support block and the steel beam use the default INERT surface. The material properties in the official input were not carried over.",
+  "Uniform cell size of 0.1 m, matching about 96 x 54 x 30 cells (the vertical spacing comes out at about 0.081 m).",
+  "No mechanical exhaust and no make-up air, as requested. Ceiling-jet sprinkler and thermocouple devices are not modelled.",
+  "Output intervals use the defaults: devices every 1 s, slices every 5 s. Thresholds profile: fr_default."
+]

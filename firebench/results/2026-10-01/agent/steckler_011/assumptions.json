@@ -1,0 +1,11 @@
+[
+  "Burner modelled as a single 0.30 m x 0.20 m rectangle (0.06 m²), so HRRPUA = 62.9/0.06 ≈ 1048 kW/m². This matches the reference Steckler value of 1048.3 kW/m².",
+  "Fire set to 'constant' (62.9 kW from t = 0 s) as requested. No time_to_peak_s or hrr_curve is set.",
+  "Fuel is methane (CH4, heat of combustion 50 000 kJ/kg, CO yield 0) because the Steckler tests used a methane burner. The schema requires soot yield to be above 0, so it is set to 0.001 instead of the reference value of 0.",
+  "The wall and floor use the default INERT surface. The fibre-board insulation lining from the reference case is not modelled.",
+  "The downstream wall is the 0.10 m thick obstruction the user specified, not the generic 0.2 m default.",
+  "Uniform mesh of 0.10 m as specified, giving 36 x 28 x about 21 cells (z = 2.13 m is not a multiple of 0.10 m, so the ceiling is snapped to the nearest cell).",
+  "Output intervals use the defaults: DT_DEVC = 1 s, DT_SLCF = 5 s.",
+  "Ambient temperature uses the FDS default (20 °C). The reference case used 25 °C, but the user did not state a value.",
+  "Thresholds profile uses the default fr_default; RSET = 120 s on the escape path."
+]

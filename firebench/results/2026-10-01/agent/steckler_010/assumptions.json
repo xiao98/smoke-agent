@@ -1,0 +1,13 @@
+[
+  "Ambient temperature 22 °C (TMPA) stated by the user; the ScenarioSpec schema has no field for it, so it must be set via MISC TMPA=22 when the FDS file is generated.",
+  "Burner footprint 0.24 m x 0.25 m = 0.06 m2, giving HRRPUA ≈ 1048 kW/m2, within the 250-2500 range.",
+  "Constant fire: full 62.9 kW from t = 0 (growth='constant'), with no time_to_peak.",
+  "Methane fuel CH4 (C=1, H=4, O=0, N=0) with heat of combustion 50 000 kJ/kg, a conventional value.",
+  "The schema needs soot yield > 0, so soot_yield = 0.001 is used as a near-zero value for clean methane combustion. The reference case uses 0.",
+  "CO yield 0.0 for methane burning with good ventilation.",
+  "Front wall 0.10 m thick, as the user specified, rather than the generic 0.2 m. Its surface is the default INERT.",
+  "The door hole (x 2.75..2.95) extends past both faces of the wall so it cuts fully through.",
+  "Uniform 0.05 m cells (72 x 56 x 44 = 177 408 cells, one mesh).",
+  "Device output every 1 s and slice output every 5 s (defaults). Simulation length 400 s, as the user specified.",
+  "No mechanical exhaust or make-up air: ventilation is natural, through the door and the open outside boundaries."
+]

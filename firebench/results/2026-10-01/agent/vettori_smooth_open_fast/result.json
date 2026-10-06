@@ -1,0 +1,125 @@
+{
+  "case": "vettori_smooth_open_fast",
+  "chid": "vettori_smooth_open_fast",
+  "mode": "agent",
+  "passed": true,
+  "gates": [
+    {
+      "name": "init",
+      "passed": true,
+      "detail": "fds+smv present",
+      "items": []
+    },
+    {
+      "name": "run",
+      "passed": true,
+      "detail": "completed=True errors=0 hrr_sim=933 hrr_expected=949 tol=10% stat=smoothed_peak starved=0%",
+      "items": []
+    },
+    {
+      "name": "experiment",
+      "passed": true,
+      "detail": "6/6 references within tolerance (NIST 2-sigma band / official ceiling)",
+      "items": [
+        {
+          "fds_col": "TC_1_02",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 101.63,
+          "fds": 108.68,
+          "rel_err": 0.069,
+          "tol": 0.451,
+          "nist_z": 0.07,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.016,
+          "ok": true
+        },
+        {
+          "fds_col": "TC_2_02",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 109.43,
+          "fds": 102.9,
+          "rel_err": 0.06,
+          "tol": 0.451,
+          "nist_z": 0.94,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.077,
+          "ok": true
+        },
+        {
+          "fds_col": "TC_1_02",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 106.93,
+          "fds": 108.68,
+          "rel_err": 0.016,
+          "tol": 0.451,
+          "nist_z": 0.41,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.034,
+          "ok": true
+        },
+        {
+          "fds_col": "TC_2_02",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 115.55,
+          "fds": 102.9,
+          "rel_err": 0.109,
+          "tol": 0.451,
+          "nist_z": 1.31,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.126,
+          "ok": true
+        },
+        {
+          "fds_col": "TC_1_02",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 92.18,
+          "fds": 108.68,
+          "rel_err": 0.179,
+          "tol": 0.451,
+          "nist_z": 0.59,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.121,
+          "ok": true
+        },
+        {
+          "fds_col": "TC_2_02",
+          "quantity": "ceiling_jet_temperature",
+          "metric": "max",
+          "exp": 119.9,
+          "fds": 102.9,
+          "rel_err": 0.142,
+          "tol": 0.451,
+          "nist_z": 1.56,
+          "nist_bias": 1.08,
+          "nist_sigma": 0.148,
+          "basis": "nist",
+          "official_rel_err": 0.158,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "criteria",
+      "passed": true,
+      "detail": "recomputed ASET matches stored criteria.json",
+      "items": []
+    }
+  ],
+  "run_tag": "2026-10-01",
+  "bundle": "firebench/runs/2026-10-01/agent/vettori_smooth_open_fast"
+}

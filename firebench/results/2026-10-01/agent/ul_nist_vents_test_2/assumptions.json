@@ -1,0 +1,10 @@
+[
+  "Burner block enlarged from 0.80x0.80 m (x 0-0.80, y 3.50-4.30) to 0.95x0.95 m (x 0-0.95, y 3.35-4.30): on the specified 0.64 m2 top, 2144 kW gives HRRPUA = 3350 kW/m2, which is above the 2500 kW/m2 limit. With 0.9025 m2 the HRRPUA is about 2376 kW/m2.",
+  "Fire modelled as constant at 2144 kW, with time_to_peak_s = 10 s to represent the 10 s rise stated in the test. The fall-off at the end of the test (930-950 s) is not modelled.",
+  "The roof vent is treated as permanently open as requested. The two lids at z 3.00-3.10 (opened at 570 s and 820 s in the test) are omitted.",
+  "The closed faces x=0, x=6.10 and y=4.30 and the solid floor at z=0 use the default inert solid boundary. No gypsum, concrete or steel thermal properties are specified.",
+  "Fuel is methane (CH4): heat of combustion 50000 kJ/kg, CO yield 0, soot yield 0.001 kg/kg (a conventional value for a clean gaseous fuel).",
+  "The outside openings are the full domain boundary planes y=-1.10 and z=4.00.",
+  "No mechanical exhaust and no make-up air.",
+  "Output intervals use the defaults: DEVC every 1 s, SLCF every 5 s."
+]

@@ -1,0 +1,137 @@
+{
+  "chid": "llnl_03",
+  "title": "Essai d'incendie en enceinte LLNL n°03 (1986) - local fermé 6 x 4 x 4,5 m, brûleur méthane 400 kW",
+  "building": {
+    "domain": {
+      "x": [
+        0.0,
+        6.0
+      ],
+      "y": [
+        0.0,
+        4.0
+      ],
+      "z": [
+        0.0,
+        4.5
+      ]
+    },
+    "obstructions": [
+      {
+        "id": "BURNER",
+        "xb": [
+          2.7,
+          3.2,
+          1.8,
+          2.2,
+          0.0,
+          0.2
+        ],
+        "surf_id": "INERT",
+        "holes": []
+      },
+      {
+        "id": "INLET_DUCT_1",
+        "xb": [
+          0.7,
+          1.0,
+          0.0,
+          2.0,
+          0.6,
+          0.9
+        ],
+        "surf_id": "INERT",
+        "holes": []
+      },
+      {
+        "id": "INLET_DUCT_2",
+        "xb": [
+          0.7,
+          1.0,
+          1.6,
+          2.0,
+          0.3,
+          0.6
+        ],
+        "surf_id": "INERT",
+        "holes": []
+      }
+    ],
+    "openings": [
+      {
+        "id": "INLET_OPENING",
+        "xb": [
+          0.7,
+          1.0,
+          0.0,
+          0.0,
+          0.6,
+          0.9
+        ],
+        "type": "open"
+      }
+    ]
+  },
+  "fire": {
+    "location_xb": [
+      2.7,
+      3.2,
+      1.8,
+      2.2,
+      0.2,
+      0.2
+    ],
+    "hrr_peak_kw": 400.0,
+    "growth": "ultrafast",
+    "time_to_peak_s": 30.0,
+    "hrr_curve": null,
+    "fuel": {
+      "name": "METHANE",
+      "soot_yield": 0.001,
+      "co_yield": 0.0,
+      "heat_of_combustion": 50000.0,
+      "c": 1.0,
+      "h": 4.0,
+      "o": 0.0,
+      "n": 0.0
+    }
+  },
+  "smoke_control": {
+    "exhaust": [],
+    "makeup": [],
+    "curtains": []
+  },
+  "escape_paths": [
+    {
+      "id": "EVAC_DOOR",
+      "polyline": [
+        [
+          1.0,
+          3.5,
+          1.8
+        ],
+        [
+          3.0,
+          3.3,
+          1.8
+        ],
+        [
+          4.8,
+          0.2,
+          1.8
+        ]
+      ],
+      "rset_s": 120.0
+    }
+  ],
+  "mesh": {
+    "cell_size": 0.15,
+    "max_cells_per_mesh": 1000000
+  },
+  "sim": {
+    "t_end_s": 500.0,
+    "dt_devc_s": 1.0,
+    "dt_slcf_s": 5.0
+  },
+  "thresholds_profile": "fr_default"
+}

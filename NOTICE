@@ -1,0 +1,29 @@
+SmokeAgent
+Copyright (c) 2026 XIAO Hao
+
+This repository is a fork of Foam-Agent (https://github.com/csml-rpi/Foam-Agent),
+Copyright (c) 2025 Ling Yue, released under the MIT License (see LICENSE).
+The multi-agent graph (src/main.py, src/nodes/, src/router_func.py), the LLM service and
+configuration (src/utils.py, src/config.py), the retrieval corpus layout and all OpenFOAM
+functionality are Foam-Agent's work. Foam-Agent is described in:
+  Yue, L. et al., "Foam-Agent: Towards Automated Intelligent CFD Workflows", arXiv:2505.04997.
+
+SmokeAgent additions, Copyright (c) 2026 XIAO Hao, MIT License:
+  src/fds/            FDS 6.11 target: ScenarioSpec, deterministic writer, validation, runner,
+                      output parser, acceptance criteria, agent nodes, namelist parser
+  firebench/          benchmark built from NIST's FDS validation suite (cases, judge, runner, report)
+  configs/            French acceptance thresholds (with sources) and NIST model-uncertainty table
+  app/                Streamlit demonstration interface
+  database/fds-6.11/  retrieval corpus built from NIST validation inputs
+
+Third-party material used or referenced:
+  Fire Dynamics Simulator (FDS) and Smokeview — National Institute of Standards and Technology,
+    United States Government work, public domain. https://github.com/firemodels/fds
+  NIST FDS validation input files and experimental data — https://github.com/firemodels/fds,
+    https://github.com/firemodels/exp, public domain. The retrieval corpus in database/fds-6.11/raw
+    and the FireBench reference device lines are derived from these files.
+  Material thermal properties — NBSIR 88-3752 as transcribed in the NIST validation inputs
+    (Validation/NBS_Multi-Room).
+  Model and experimental uncertainty statistics — FDS Validation Guide, FDS 6.11.1, Table 16.1.
+  Qwen3-Embedding-0.6B (Alibaba, Apache-2.0) is downloaded at corpus build time and is not
+    redistributed here; the FAISS indices in database/fds-6.11/faiss were produced with it.
