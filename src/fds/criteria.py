@@ -182,7 +182,11 @@ def read_hrr_series(csv_path: Path) -> tuple[list[float], list[float]]:
     return t, h
 
 
-HRR_STARVED_MAX = 0.20  # fraction of the plateau the fire may spend below 50 % of the prescribed HRR
+# Fraction of the plateau the fire may spend below 50 % of the prescribed HRR before the run is an error.
+# Calibration: NIST's own LLNL_03/04 inputs starve for 23-32 % of the plateau (oxygen-limited enclosure, physical),
+# NBS_100O for 5 %; the sealed-room bug (door closed by a thin plate on the mesh interface) gave 78 %.
+HRR_STARVED_MAX = 0.50
+HRR_STARVED_WARN = 0.20  # above this the run is flagged "under-ventilated" in the result, not failed
 
 
 def hrr_check(spec: ScenarioSpec, csv_path: Path, t_end: float | None = None, window_s: float = HRR_WINDOW_S) -> dict:
@@ -208,7 +212,8 @@ def hrr_check(spec: ScenarioSpec, csv_path: Path, t_end: float | None = None, wi
         sim = s[len(s) // 2]
         starved = sum(1 for v in seg if v < 0.5 * peak) / len(seg)
         ok = abs(sim - peak) <= HRR_TOL * peak and starved <= HRR_STARVED_MAX
-        return {"ok": ok, "sim": sim, "expected": peak, "tol": HRR_TOL, "statistic": "plateau_median", "starved_frac": starved}
+        warn = f"under-ventilated: HRR below half the prescribed value for {starved:.0%} of the plateau" if HRR_STARVED_WARN < starved <= HRR_STARVED_MAX else ""
+        return {"ok": ok, "sim": sim, "expected": peak, "tol": HRR_TOL, "statistic": "plateau_median", "starved_frac": starved, "warning": warn}
     sim = max(hs)
     expected = expected_hrr_peak(spec, t_end)
     tol = hrr_tolerance(spec, t_end)

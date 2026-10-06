@@ -256,6 +256,8 @@ def run(state: dict) -> dict:
     hrr_csv = case_dir / f"{spec.chid}_hrr.csv"
     if not errs and hrr_csv.exists():
         hc = C.hrr_check(spec, hrr_csv, spec.sim.t_end_s)
+        if hc.get("warning"):
+            print(f"<fds_runner note>{hc['warning']}</fds_runner>")
         if not hc["ok"]:
             logs.append(f"[hrr_mismatch] simulated HRR ({hc['statistic']}) {hc['sim']:.0f} kW vs prescribed {hc['expected']:.0f} kW; "
                         f"fire below half the prescribed HRR for {hc['starved_frac']:.0%} of its plateau\n"

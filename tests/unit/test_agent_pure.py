@@ -89,6 +89,11 @@ def test_hrr_check_plateau_burst_and_sealed(tmp_path):
     vals = [(t, 110.0 if t < 200 else 0.0) for t in range(951)]
     hc = hrr_check(spec, _hrr_csv(tmp_path, vals))
     assert not hc["ok"] and hc["starved_frac"] > 0.5
+    # LLNL-like oxygen-limited enclosure: fire dies at 380 of 500 s (23 % starved) -> physical, warning only
+    vals = [(t, 400.0 if t < 380 else 0.0) for t in range(501)]
+    spec3 = ScenarioSpec(**dict(THREE_ROOMS, fire={**fire, "hrr_peak_kw": 400, "hrr_curve": None, "growth": "ultrafast", "time_to_peak_s": 30}, sim={"t_end_s": 500}))
+    hc = hrr_check(spec3, _hrr_csv(tmp_path, vals))
+    assert hc["ok"] and "under-ventilated" in hc["warning"]
     # half the burner face lost to the grid: median 56 kW
     vals = [(t, 56.0) for t in range(951)]
     assert not hrr_check(spec, _hrr_csv(tmp_path, vals))["ok"]
